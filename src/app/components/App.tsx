@@ -1,45 +1,105 @@
-import React from 'react';
-import logo from '../assets/logo.svg';
-import '../styles/ui.css';
+// App.js
+import React, { useState, useEffect } from 'react';
+import Authentication from './Authentication';
+import Navigation from './Navigation';
+import LinterOptions from './LinterOptions';
+import ContentReelOptions from './ContentReelOptions';
+import Results from './Results';
+import ContentReel from './ContentReel'; // Import the ContentReel component
 
 function App() {
-  const textbox = React.useRef<HTMLInputElement>(undefined);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [activeTab, setActiveTab] = useState('linter');
+  const [results, setResults] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [activeLinterOption, setActiveLinterOption] = useState('All');
 
-  const countRef = React.useCallback((element: HTMLInputElement) => {
-    if (element) element.value = '5';
-    textbox.current = element;
-  }, []);
+  useEffect(() => {
+    console.log('Results in App after update:', results);
+  }, [results]);
 
-  const onCreate = () => {
-    const count = parseInt(textbox.current.value, 10);
-    parent.postMessage({ pluginMessage: { type: 'create-rectangles', count } }, '*');
-  };
-
-  const onCancel = () => {
-    parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*');
-  };
-
-  React.useEffect(() => {
-    // This is how we read messages sent from the plugin controller
+  useEffect(() => {
     window.onmessage = (event) => {
-      const { type, message } = event.data.pluginMessage;
-      if (type === 'create-rectangles') {
-        console.log(`Figma Says: ${message}`);
+      const { type, data } = event.data.pluginMessage;
+
+      switch (type) {
+        case 'tokenSaved':
+          setAuthenticated(true);
+          break;
+        case 'invalidToken':
+          // Handle invalid token
+          break;
+        case 'errorToken':
+          console.log('Error getting token');
+          break;
+        case 'results':
+          console.log('data!!:', data);
+          setResults(data);
+          setLoading(false);
+          break;
+        case 'none':
+          setResults({});
+          setLoading(false);
+          break;
       }
     };
   }, []);
 
+  const handleTokenSubmit = (token) => {
+    parent.postMessage({ pluginMessage: { type: 'saveToken', token } }, '*');
+  };
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setResults({}); // Clear results when changing tabs
+  };
+
+  const handleLinterOptionClick = (option) => {
+    console.log('handleLinterOptionClick: ', option);
+    setActiveLinterOption(option);
+    setLoading(true);
+    parent.postMessage({ pluginMessage: { type: 'userSelection', value: option } }, '*');
+  };
+
+  const handleContentReelClick = () => {
+    setLoading(true);
+    parent.postMessage({ pluginMessage: { type: 'contentReel', value: 'Content Reel' } }, '*');
+  };
+
   return (
-    <div>
-      <img src={logo} />
-      <h2>Rectangle Creator</h2>
-      <p>
-        Count: <input ref={countRef} />
-      </p>
-      <button id="create" onClick={onCreate}>
-        Create
-      </button>
-      <button onClick={onCancel}>Cancel</button>
+    <div className={'authenticationContainer'}>
+      {!authenticated ? (
+        <Authentication onSubmit={handleTokenSubmit} />
+      ) : (
+        <>
+          <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
+          {activeTab === 'linter' ? (
+            <>
+              <LinterOptions onClick={handleLinterOptionClick} activeOption={activeLinterOption} />
+              {loading ? (
+                <div className={'loading'}>
+                  {/* Add your loading SVG here */}
+                  Linting...
+                </div>
+              ) : (
+                <Results results={results} />
+              )}
+            </>
+          ) : (
+            <>
+              <ContentReelOptions onClick={handleContentReelClick} />
+              {loading ? (
+                <div className={'loading'}>
+                  {/* Add your loading SVG here */}
+                  Loading Content Reel...
+                </div>
+              ) : (
+                <ContentReel results={results} />
+              )}
+            </>
+          )}
+        </>
+      )}
     </div>
   );
 }

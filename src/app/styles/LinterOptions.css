@@ -1,0 +1,17 @@
+.linterOptions{
+    display: flex;
+    gap: 16px;
+}
+
+button{
+    padding: 8px 12px;
+    background-color: white;
+    border: 2px solid blue;
+    border-radius: 4px;
+}
+
+
+.linterOptions button.activeButton {
+    background-color: #007bff;
+    color: #fff;
+  }
