@@ -1,13 +1,11 @@
-// components/Results.js
 import React from 'react';
 import ListItem from './ListItem';
-import '../styles/Results.css';
+import '../styles/Linter.scss';
+// import CheckIcon from '../icons/CheckIcon';
+// import AlertIcon from '../icons/AlertIcon';
 
 function Results({ results }) {
   console.log('Results!!!:', results);
-  if (Object.keys(results).length === 0) {
-    return <div className={'noErrors'}>No errors in this selection!</div>;
-  }
 
   const cornerMapTypes = [
     'bottomLeftRadiusMap',
@@ -26,55 +24,64 @@ function Results({ results }) {
     'paddingTopBottomMap',
   ];
 
+// Calculate total number of issues
+const getTotalIssues = () => {
+  return [
+    ...cornerMapTypes,
+    ...spacingMapTypes,
+    'hexColors',
+    'missingVariables',
+    'missingStyles'
+  ].reduce((total, key) => {
+    return total + (results[key]?.length || 0);
+  }, 0);
+};
+
+const totalIssues = getTotalIssues();
   return (
+    <>
     <div className={'results'}>
-      {results.hexColors && (
-        <div className={'hexColors'}>
-          {/* <h3>Hex Colors</h3> */}
-          {results.hexColors.map((item, index) => (
+      {/* No errors */}
+      {Object.keys(results).length === 0 ? (
+        <div className={'successContainer'}>
+          <img className='successGraphic' src='https://cdn-icons-png.flaticon.com/512/6808/6808239.png'></img>
+          <p>Everything looks great!</p>
+        </div>
+      ) : (
+        <>
+          {results.hexColors?.map((item, index) => (
             <ListItem key={index} item={item} type="hex" />
           ))}
-        </div>
-      )}
 
-      {results.missingVariables && (
-        <div className={'missingVariables'}>
-          {results.missingVariables.map((item, index) => (
+          {results.missingVariables?.map((item, index) => (
             <ListItem key={index} item={item} type="variable" />
           ))}
-        </div>
-      )}
 
-      {results.missingStyles && (
-        <div className={'missingStyles'}>
-          {results.missingStyles.map((item, index) => (
+          {results.missingStyles?.map((item, index) => (
             <ListItem key={index} item={item} type="style" />
           ))}
-        </div>
-      )}
 
-      {cornerMapTypes.map(
-        (mapType) =>
-          results[mapType] && (
-            <div key={mapType} className={'corner'}>
-              {results[mapType].map((item, index) => (
-                <ListItem key={index} item={item} type={mapType.replace('Map', '')} />
-              ))}
-            </div>
-          )
-      )}
+          {cornerMapTypes.flatMap(mapType => 
+            results[mapType]?.map((item, index) => (
+              <ListItem key={`${mapType}-${index}`} item={item} type={mapType.replace('Map', '')} />
+            )) || []
+          )}
 
-      {spacingMapTypes.map(
-        (mapType) =>
-          results[mapType] && (
-            <div key={mapType} className={'corner'}>
-              {results[mapType].map((item, index) => (
-                <ListItem key={index} item={item} type={mapType.replace('Map', '')} />
-              ))}
-            </div>
-          )
+          {spacingMapTypes.flatMap(mapType => 
+            results[mapType]?.map((item, index) => (
+              <ListItem key={`${mapType}-${index}`} item={item} type={mapType.replace('Map', '')} />
+            )) || []
+          )}
+        </>
       )}
     </div>
+    <div className='footer'>
+    <div className={totalIssues === 0 ? 'footer_no_errors' : 'footer_issues'}>
+       <p>{totalIssues} {totalIssues === 1 ? 'issue' : 'issues'}</p>
+      </div>
+
+    </div>
+    </>
   );
 }
 

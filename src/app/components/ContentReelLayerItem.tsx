@@ -5,7 +5,7 @@ function ContentReelLayerItem({ item, type, onSelectionChange }) {
   const [showOptions, setShowOptions] = useState(true);
   const [selectedOption, setSelectedOption] = useState(null);
 
-  const textOptions = ['Duration', 'Timestamp', 'Author', 'Player', 'Headline'];
+  const textOptions = ['Duration', 'Timestamp', 'Author', 'Player', 'League', 'Headline'];
   const imageOptions = ['Headshot', 'Thumbnail'];
 
   useEffect(() => {
@@ -28,7 +28,7 @@ function ContentReelLayerItem({ item, type, onSelectionChange }) {
         <div className="layerContent">
           <div className={'textNode'}>
             <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0H0.55H5.5H10.45H11V0.55V3.3H9.9V1.1H6.05V9.9H7.7V11H5.5H3.3V9.9H4.95V1.1H1.1V3.3H0V0.55V0Z" fill="black"/>
+            <path fillRule="evenodd" clipRule="evenodd" d="M0 0H0.55H5.5H10.45H11V0.55V3.3H9.9V1.1H6.05V9.9H7.7V11H5.5H3.3V9.9H4.95V1.1H1.1V3.3H0V0.55V0Z" fill="black"/>
             </svg>
 
             <div className="textContent" onClick={toggleOptions}>

@@ -7,17 +7,13 @@ import * as API from './access';
 import * as Authenticate from './authentication';
 
 // Constants
-const UI_WIDTH = 600;
+const UI_WIDTH = 500;
 const UI_HEIGHT = 600;
 
 // State
 export let userSelection: string;
 export let importedLibraries: LibraryVariableCollection[] = [];
 
-// interface ContentReelChange {
-//   item: [string, string]; // Assuming item is a tuple of [nodeName, nodeId]
-//   option: string;
-// }
 
 // Initialize UI
 figma.showUI(__html__);
@@ -26,25 +22,16 @@ figma.ui.resize(UI_WIDTH, UI_HEIGHT);
 // figma.clientStorage.deleteAsync("figmaToken");
 // figma.clientStorage.deleteAsync("keyMap");
 
-// Retrieve the token when the plugin initializes
-async function init() {
-  const token = await figma.clientStorage.getAsync('figmaToken');
-  // console.log(token);
-  if (token) {
-    console.log('token: ', token);
-    figma.ui.postMessage({ type: 'tokenSaved', token });
-  } else {
-    figma.ui.postMessage({ type: 'errorToken' });
-  }
-}
-
 init();
+
 // Message handler
 figma.ui.onmessage = async (msg) => {
-  // console.log(msg);
-  // console.log(msg.type);
+  console.log(msg);
+  console.log(msg.type);
+  console.log(msg.value);
   // console.log(msg.value[0]);
   // console.log(msg.value[0].id);
+
   switch (msg.type) {
     case 'saveToken':
       await Authenticate.saveToken(msg.token);
@@ -69,8 +56,8 @@ figma.ui.onmessage = async (msg) => {
       // figma.closePlugin();
       break;
     case 'userSelection':
-      console.log('entered userSelection, ', msg.value);
-      userSelection = msg.value[2];
+      // console.log('entered userSelection, ', msg.value);
+      userSelection = msg.value;
       await handleUserSelection();
       break;
     case 'selectSpecificNode':
@@ -83,6 +70,19 @@ figma.ui.onmessage = async (msg) => {
       break;
   }
 };
+
+
+// Retrieve the token when the plugin initializes
+async function init() {
+  const token = await figma.clientStorage.getAsync('figmaToken');
+  if (token) {
+    figma.ui.postMessage({ type: 'tokenSaved', token });
+  } else {
+    figma.ui.postMessage({ type: 'errorToken' });
+  }
+}
+
+// Select/zoom into the node that the user selected
 async function handleSpecificNode(nodeId: string) {
   const node = await figma.getNodeByIdAsync(nodeId);
   if (node && 'type' in node) {
@@ -97,13 +97,15 @@ async function handleSpecificNode(nodeId: string) {
   }
 }
 
-// Helper functions
+/* If user selects any of the Linter options, reset all the data, check imported libraries, 
+   and go through the selection */
 async function handleUserSelection() {
   await Linter.resetData();
   await logAvailableLibraries();
   await checkIfBound(figma.currentPage.selection);
 }
 
+// Select all of the issue nodes if the user presses the 'Select All' button
 async function selectAllNodes(values: string[]) {
   const nodes: SceneNode[] = [];
 
@@ -120,6 +122,7 @@ async function selectAllNodes(values: string[]) {
   figma.viewport.scrollAndZoomIntoView(nodes);
 }
 
+// Checks which libraries are imported into the file
 export async function logAvailableLibraries() {
   try {
     importedLibraries = await figma.teamLibrary.getAvailableLibraryVariableCollectionsAsync();
@@ -128,14 +131,17 @@ export async function logAvailableLibraries() {
   }
 }
 
+ 
 async function checkIfBound(selection: readonly SceneNode[]) {
   try {
+    // Go through each selected node
     for (const element of selection) {
-      // Go through each node
       const node = (await figma.getNodeByIdAsync(element.id)) as SceneNode;
-      console.log(node);
+      // console.log(node);
       await traverseNode(node);
     }
+
+    // After scanning each node, send it back to the UI
     Linter.sendResultsToUI();
   } catch (error) {
     console.error('Error:', error);
@@ -145,7 +151,7 @@ async function checkIfBound(selection: readonly SceneNode[]) {
 async function traverseNode(node: SceneNode) {
   // Will make sure the node is not an instance, component, or component_set == will check if it's a logo
   if (await shouldSkipNode(node)) return;
-  console.log(userSelection);
+
   // Lint for spacing
   if (userSelection === 'Spacing' || userSelection === 'All') {
     console.log(node);
@@ -155,6 +161,7 @@ async function traverseNode(node: SceneNode) {
 
   // Lint for nodes that have a solid paint fill
   if (userSelection !== 'spacing' && !Helper.isGroupNode(node) && (node as any).fills?.[0]?.type !== 'IMAGE') {
+    console.log('gonna checknodecolors');
     await checkNodeColors(node);
   }
 
@@ -165,10 +172,11 @@ async function traverseNode(node: SceneNode) {
   }
 }
 
+// Skip asset components and locked nodes
 async function shouldSkipNode(node: SceneNode): Promise<boolean> {
-  if (userSelection === 'Content Reel') return true;
-  // Skip the node if it's locked
+  // Node is locked
   if (Utilities.isLocked(node)) return true;
+
 
   if (Helper.isOneOfNodeType(node, ['INSTANCE', 'COMPONENT', 'COMPONENT_SET'])) {
     const keyFound = await checkComponent(node);
@@ -177,6 +185,7 @@ async function shouldSkipNode(node: SceneNode): Promise<boolean> {
   return false;
 }
 
+// Scan each node's fill and stroke
 async function checkNodeColors(node: SceneNode) {
   const fillableNode = node as unknown as {
     fills: Paint[];
@@ -184,6 +193,7 @@ async function checkNodeColors(node: SceneNode) {
     strokes: Paint[];
     strokeStyleId: string;
   };
+  
   await Linter.checkColors(fillableNode.fills, fillableNode.fillStyleId, node);
   await Linter.checkColors(fillableNode.strokes, fillableNode.strokeStyleId, node);
 }
@@ -205,10 +215,10 @@ async function checkComponent(node: any): Promise<boolean> {
 
     // Check if the short key is in assetsKeys
     if (API.keyMap.has(shortKey)) {
-      console.log('key was found');
+      // console.log('key was found');
       return true;
     } else {
-      console.log('key was not found');
+      // console.log('key was not found');
       return false;
     }
   }

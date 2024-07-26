@@ -6,6 +6,7 @@ import LinterOptions from './LinterOptions';
 import ContentReelOptions from './ContentReelOptions';
 import Results from './Results';
 import ContentReel from './ContentReel'; // Import the ContentReel component
+// import '../styles/UI.scss';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -73,31 +74,39 @@ function App() {
       ) : (
         <>
           <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
-          {activeTab === 'linter' ? (
-            <>
-              <LinterOptions onClick={handleLinterOptionClick} activeOption={activeLinterOption} />
-              {loading ? (
-                <div className={'loading'}>
-                  {/* Add your loading SVG here */}
-                  Linting...
-                </div>
-              ) : (
-                <Results results={results} />
-              )}
-            </>
-          ) : (
-            <>
-              <ContentReelOptions onClick={handleContentReelClick} />
-              {loading ? (
-                <div className={'loading'}>
-                  {/* Add your loading SVG here */}
-                  Loading Content Reel...
-                </div>
-              ) : (
-                <ContentReel results={results} />
-              )}
-            </>
-          )}
+          <div className="rightBody">
+            {activeTab === 'linter' ? (
+              <>
+                <LinterOptions onClick={handleLinterOptionClick} activeOption={activeLinterOption} />
+                {loading ? (
+                  <div className={'loading'}>
+                    {/* Add your loading SVG here */}
+                    Linting...
+                  </div>
+                ) : (
+                  <Results results={results} />
+                )}
+                {/* <div className='footer'>
+                  <div className='footer_issues'>
+                    <p>8 issues</p>
+                  </div>
+
+                </div> */}
+              </>
+            ) : (
+              <>
+                <ContentReelOptions onClick={handleContentReelClick} />
+                {loading ? (
+                  <div className={'loading'}>
+                    {/* Add your loading SVG here */}
+                    Loading Content Reel...
+                  </div>
+                ) : (
+                  <ContentReel results={results} />
+                )}
+              </>
+            )}
+          </div>
         </>
       )}
     </div>

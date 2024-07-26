@@ -1,17 +1,19 @@
 // LinterOptions.js
 import React from 'react';
-import '../styles/LinterOptions.css';
+// import '../styles/LinterOptions.css';
+import '../styles/Linter.scss';
 
 function LinterOptions({ onClick, activeOption }) {
-  const options = ['All', 'Enabled Libraries', 'Disconnected Hex', 'Spacing'];
+  // const options = ['All', 'Enabled Libraries', 'Disconnected Hex', 'Spacing'];
+  const options = ['All', 'Library', 'Hex', 'Spacing'];
 
   return (
-    <div className={'linterOptions'}>
+    <div className={'linterFilters'}>
       {options.map((option) => (
         <button
           key={option}
           onClick={() => onClick(option)}
-          className={activeOption === option ? 'activeButton' : ''}
+          className={`linter_button ${activeOption === option ? 'active_linter_button' : ''}`}
         >
           {option}
         </button>

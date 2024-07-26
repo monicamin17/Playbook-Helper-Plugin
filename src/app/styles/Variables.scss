@@ -1,0 +1,130 @@
+// @collapse
+$pb_gradient:(
+
+  c: #0066FE
+);
+
+
+// Color Palettes
+$neutral: (
+  0: #fafafb,
+  5: #f3f3f4,
+  10: #e7e7e8,
+  20: #cecfd2,
+  30: #b6b7bb,
+  40: #9e9fa5,
+  50: #81848e,
+  60: #707381,
+  70: #555762,
+  80: #3d3f4b,
+  90: #242735,
+  95: #181b29,
+  100: #040c35
+);
+
+$sports-blue-a: (
+  0: #fafcfe,
+  5: #f2f8fe,
+  10: #cde3fa,
+  20: #b4d4f7,
+  30: #9bc6f5,
+  40: #6aaaf0,
+  50: #0671e6,
+  60: #0566cf,
+  70: #055ab8,
+  80: #044fa1,
+  90: #04448a,
+  95: #033873,
+  100: #022d5c
+);
+
+$green: (
+  10: #E5F0D1,
+    70: #639113,
+    80: #577F11
+);
+
+$red: (
+  5: #FDF3F4,
+  60: #C20920,
+  70: #AD081C
+);
+
+$spacing: (
+  0: 0px,
+  25: 4px,
+  50: 8px,
+  75: 12px,
+  100: 16px,
+  125: 20px,
+  150: 24px,
+  200: 32px,
+  250: 40px,
+  300: 48px,
+  400: 64px,
+  600: 96px,
+  800: 128px
+);
+
+$radius: (
+    0:0px,
+    2:2px,
+    4:4px,
+    6:6px,
+    8:8px,
+    12:12px,
+    16:16px,
+    circle: 9999px
+);
+
+// Theme Maps
+$light-theme: (
+  text: (
+    primary: map-get($neutral, 95),
+    secondary: map-get($neutral, 60),
+    tertiary: map-get($neutral, 40),
+    disabled: map-get($neutral, 20),
+    positive: map-get($green, 80),
+    negative: map-get($red, 70),
+    alert: map-get($red, 70),
+    // information: map-get($gold, 95),
+    action-link-primary: map-get($neutral, 95),
+    action-link-secondary: map-get($sports-blue-a, 70)
+  ),
+  surfaces: (
+    primary: #ffffff,
+    secondary: map-get($neutral, 5),
+    tertiary: map-get($neutral, 10),
+    positive: map-get($green, 10),
+    negative: map-get($red, 10),
+    alert: map-get($red, 5),
+    // information: map-get($gold, 10),
+    status: map-get($sports-blue-a, 5)
+  ),
+  // ... Define other properties
+  utility: (
+    border_primary: map-get($neutral, 20),
+    border_secondary: map-get($neutral, 80),
+    disabled: map-get($neutral, 30),
+    graphic_positive: map-get($green, 70),
+    graphic_alert: map-get($red, 60),
+    icon_primary: map-get($neutral, 95),
+    icon_secondary: map-get($neutral, 60),
+
+  ),
+);
+
+
+// Function to get theme color
+@function theme-color($theme, $category, $property) {
+  @return map-get(map-get($theme, $category), $property);
+}
+
+// Usage example
+// .primary-text {
+//   color: theme-color($light-theme, text, primary);
+// }
+
+// .secondary-surface {
+//   background-color: theme-color($dark-theme, surfaces, secondary);
+// }

@@ -97,8 +97,17 @@ export async function checkSpacing(node: any) {
 }
 
 export async function checkRadius(node: any) {
-  let boundVariables = node["boundVariables"];
+  // Note: Vectors have ONLY a cornerRadius and don't have a boundVariables.cornerRadius
+  if(node.type === 'VECTOR'){
+    if(node.cornerRadius !== 0){
+      addToMap(radiusMap, node.cornerRadius,  node.name, node.id, "Radius missing");
+    }
 
+    // Vectors don't have any other type of radius, so return
+    return;
+  }
+
+  let boundVariables = node["boundVariables"];
   // All radius have the same value
   if (
     boundVariables["bottomLeftRadius"] === undefined &&

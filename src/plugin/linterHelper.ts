@@ -8,42 +8,44 @@ import * as Helper from "@figma-plugin/helpers";
 // export let userSelection = 'All';
 export let importedLibraries: any[] = [];
 
+// Handle the colors appropriately (if it's a gradient or not)
 export async function checkColors(
   colors: any[],
   styleId: string,
   node: SceneNode
 ) {
   if (!Array.isArray(colors) || colors.length === 0) return;
-
   for (const color of colors) {
-    if (isHexCheck(color, styleId)) {
-      await Hex.manageHex([color.color], node);
-    } else if (isUnimportedCheck(color, styleId)) {
+    if (checkColorsType(color, styleId)) {
+      console.log('color.color: ', color.color);
+      if(color.color){
+        await Hex.manageHex([color.color], node);
+      }
+      else{
+        await Hex.manageGradient(color.gradientStops, node);
+      }
+    } else if (!checkColorsType(color, styleId)) {
       await handleUnimportedColor(color, styleId, node);
     }
   }
 }
 
-function isHexCheck(color: any, styleId: string): boolean {
+function checkColorsType(color: any, styleId: string) : boolean{
+  const hasNoBoundVariables = !color?.boundVariables || Object.keys(color.boundVariables).length === 0;
+  console.log('hasNoBoundVariables: ', hasNoBoundVariables);
   return (
-    (Main.userSelection === "Disconnected Hex" || Main.userSelection === "All") &&
-    Object.keys(color.boundVariables).length === 0 &&
+    hasNoBoundVariables &&
     styleId === ""
   );
 }
 
-function isUnimportedCheck(color: any, styleId: string): boolean {
-  return (
-    (Main.userSelection === "Enabled Libraries" || Main.userSelection === "All") &&
-    (Object.keys(color.boundVariables).length !== 0 || styleId !== "")
-  );
-}
 
 async function handleUnimportedColor(
   color: any,
   styleId: string,
   node: SceneNode
 ) {
+  console.log('what');
   if (styleId !== "") {
     await Libraries.checkStyle(styleId, node);
   } else {
@@ -70,9 +72,11 @@ export async function resetData() {
   Spacing.paddingTopBottomMap.clear();
 }
 
+// If user lints for spacing, start the functions
 export async function startSpacing(node: any) {
   Spacing.checkRadius(node);
-  // Must be a frame and in autolayout
+
+  // Only frames in autolayout can have padding/spacing
   if (Helper.isFrameNode(node) && node["layoutMode"] !== "NONE")
     Spacing.checkSpacing(node);
 }
@@ -96,8 +100,8 @@ export async function sendResultsToUI() {
     paddingBottomMap?: any[];
     paddingTopBottomMap?: any[];
   } = {};
-
-  if (Main.userSelection === "Enabled Libraries" || Main.userSelection === "All") {
+console.log(results);
+  if (Main.userSelection === "Library" || Main.userSelection === "All") {
     if (Libraries.missingVariables.size > 0) {
       results.missingVariables = Array.from(
         Libraries.missingVariables.entries()
@@ -110,7 +114,7 @@ export async function sendResultsToUI() {
   }
 
   if (
-    (Main.userSelection === "Disconnected Hex" || Main.userSelection === "All") &&
+    (Main.userSelection === "Hex" || Main.userSelection === "All") &&
     Hex.hexMap.size > 0
   ) {
     results.hexColors = Array.from(Hex.hexMap.entries());

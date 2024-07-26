@@ -1,6 +1,7 @@
 import * as Utilities from "@create-figma-plugin/utilities";
 import * as Helper from "@figma-plugin/helpers";
-// // import { AthleteData, sampleAthleteData, TeamData } from './data'; // Adjust the path if necessary
+const frameToNodes: Map<string, { parentFrameName:string, textNodes: [string, string][], imageNodes?: [string, string][], article?: Article }> = new Map();
+// <frameId, {[nodes.name, node.id], article?}
 
 export let textNodes: [string, string][] = [];
 export let imageNodes: [string, string][] = [];
@@ -10,6 +11,8 @@ export let textOptions = [
   "Timestamp",
   "Author",
   "Team",
+  "Player",
+  "League"
 ];
 const accessToken = "50faf2503afd19c54d1173aa12b818aaa6732cbf";
 
@@ -50,47 +53,119 @@ class Player {
   }
 }
 
-export async function handleSelection(id: string, option: string) {
-    console.log('entered HandleSelection');
-    // console.log(item);
-    console.log(option);
-    let nodeId = id;
-    let info;
+// Scan through all selected nodes
+export async function start() {
+  for (const node of figma.currentPage.selection) {
+    await Utilities.traverseNodeAsync(node, parseNodes);
+  }
 
-  switch (option) {
-    case "Headline":
-      info = await fetchValidArticle(getRandomLeague());
-      if (info instanceof Article) {
-        replaceText(nodeId, info.promoTitle);
-      }
-      break;
-    case "Duration":
-      replaceText(nodeId, getRandomDuration());
-      break;
-    case "Timestamp":
-      replaceText(nodeId, getRandomHoursAgo());
-      break;
-    case "Author":
-      info = await fetchValidArticle(getRandomLeague());
-      if (info instanceof Article) {
-        replaceText(nodeId, info.author);
-      }
-      break;
-    case "Team":
-      info = await fetchValidArticle(getRandomLeague());
-      if (info instanceof Article) {
-        replaceText(nodeId, info.team);
-      }
-      break;
-    case "Thumbnail":
-      console.log('fethcing...')
-        info = await fetchValidArticle(getRandomLeague());
+  const framesObject = Object.fromEntries(frameToNodes);
+
+  figma.ui.postMessage({ type: "results", data: { text: textNodes, image: imageNodes, frames: framesObject } });
+}
+
+function parseFrameId(id:string){
+  const trimmedString = id.startsWith('I') ? id.substring(1) : id;
+  const parts = trimmedString.split(';');
+  const firstPart = parts[0];
+  return firstPart;
+}
+
+// Check if each node is TEXT or IMAGE
+async function parseNodes(node: any) {
+  if (Helper.isTextNode(node) && Helper.isVisibleNode(node)) {
+    const parentFrame = getParentFrame(node);
+    if (parentFrame) {
+      let parentId = parseFrameId(parentFrame.id);
+      let frameData = frameToNodes.get(parentId) || { parentFrameName: '', textNodes: [], imageNodes: [], article: null };
+      frameData.textNodes.push([node.name, node.id]);
+      frameData.parentFrameName = parentFrame.name;
+      frameToNodes.set(parentId, frameData);
+    } else {
+      textNodes.push([node.name, node.id]);
+    }
+  } else if (node?.fills?.[0]?.type === "IMAGE" && Helper.isVisibleNode(node)) {
+    const parentFrame = getParentFrame(node);
+    if (parentFrame) {
+      let parentId = parseFrameId(parentFrame.id);
+      let frameData = frameToNodes.get(parentId) || {  parentFrameName: '', textNodes: [], imageNodes: [], article: null };
+      frameData.imageNodes.push([node.name, node.id]);
+      frameData.parentFrameName = parentFrame.name;
+      frameToNodes.set(parentId, frameData);
+    } else {
+      imageNodes.push([node.name, node.id]);
+    }
+  }
+}
+
+// Helper function to get the parent frame of a node
+function getParentFrame(node: BaseNode): InstanceNode | ComponentNode | null {
+  let parent = node.parent;
+  while (parent) {
+    // Make sure the parent is an instance
+    if (parent.type === "INSTANCE" || parent.type === "COMPONENT") {
+      return parent;
+    }
+    parent = parent.parent;
+  }
+  return null;
+}
+
+export async function handleSelection(nodeId: string, option: string) {
+  // Determine the frame parent of the node
+  const node = await figma.getNodeByIdAsync(nodeId);
+  const parentFrame = getParentFrame(node);
+
+  if (parentFrame) {
+    const frameData = frameToNodes.get(parentFrame.id);
+    if (frameData && !frameData.article) {
+      // Fetch and store the article information for the frame
+      const league = getRandomLeague();
+      frameData.article = await fetchValidArticle(league);
+    }
+  }
+
+  // Apply the article information or other options
+  let info = parentFrame ? frameToNodes.get(parentFrame.id)?.article : null;
+  if (info) {
+    switch (option) {
+      case "Headline":
         if (info instanceof Article) {
-            replaceImg(nodeId, info.url);
+          replaceText(nodeId, info.promoTitle);
         }
         break;
-    case 'Test':
-      await fetchLeague('NFL', 'article');
+      case "Duration":
+        replaceText(nodeId, getRandomDuration());
+        break;
+      case "Timestamp":
+        replaceText(nodeId, getRandomHoursAgo());
+        break;
+      case "Author":
+        if (info instanceof Article) {
+          replaceText(nodeId, info.author);
+        }
+        break;
+      case "Team":
+        if (info instanceof Article) {
+          replaceText(nodeId, info.team);
+        }
+        break;
+      case "Player":
+        if (info instanceof Article) {
+          replaceText(nodeId, info.team);
+        }
+        break;
+      case "League":
+        replaceText(nodeId, getRandomLeague());
+        break;
+      case "Thumbnail":
+        if (info instanceof Article) {
+          replaceImg(nodeId, info.url);
+        }
+        break;
+      case 'Test':
+        await fetchLeague('NFL', 'article');
+    }
   }
 }
 
@@ -139,62 +214,7 @@ function getRandomLeague() {
   return leagues[randomIndex];
 }
 
-/* async function startArticleInfo() {
-  let league = getRandomLeague();
-  let article = await fetchLeague(league, "article");
-  console.log(article);
-  return article;
-} */
 
-// Scan through all selected nodes
-export async function start() {
-  for (const node of figma.currentPage.selection) {
-    await Utilities.traverseNodeAsync(node, parseNodes);
-  }
-
-  // if (textNodes.length > 0) {
-  //   figma.ui.postMessage({ type: "results", data: { contentReel: textNodes } });
-  // }
-  // if (imageNodes.length > 0) {
-  //   figma.ui.postMessage({ type: "results", data: { contentReel: imageNodes } });
-  // }
-  figma.ui.postMessage({ type: "results", data: { text: textNodes, image: imageNodes } });
-}
-
-// Check if each node is TEXT or IMAGE
-async function parseNodes(node: any) {
-  if (Helper.isTextNode(node) && Helper.isVisibleNode(node)) {
-    textNodes.push([node.name, node.id]);
-    // console.log(node.name);
-  } else if (node?.fills?.[0]?.type === "IMAGE" && Helper.isVisibleNode(node)) {
-    console.log(node.name, "is an image!");
-    imageNodes.push([node.name, node.id]);
-  }
-}
-
-// Replace images with content
-/* export async function handleImages() {
-  console.log(imageNodes);
-  for (const img of imageNodes) {
-    console.log(img?.fills?.[0]);
-
-    // Get an image from a URL.
-    figma
-      .createImageAsync("https://picsum.photos/200")
-      .then(async (image: Image) => {
-        // Render the image by filling the rectangle.
-        img.fills = [
-          {
-            type: "IMAGE",
-            imageHash: image.hash,
-            scaleMode: "FILL",
-          },
-        ];
-      });
-
-    // if the image is a component, should change the images in the other variants as well
-  }
-} */
 
 async function fetchLeague(league: string, option: string) {
   const seasonType = "regular";
@@ -250,7 +270,7 @@ async function fetchTeams(teamId: string, option: string) {
     if (option === "player") {
       return await fetchPlayer(randomPlayerId, teamNickname);
     } else {
-      return await fetchArticle(teamId, teamNickname);
+      return await fetchArticle(teamId, teamNickname, getRandomLeague());
     }
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -277,40 +297,14 @@ async function fetchPlayer(playerIds: string, teamNickname: string) {
     console.error("Error fetching data:", error);
   }
 }
-/* 
-async function fetchArticle(teamIds:string, teamName:string){
-    const url = `https://sdf-api.cbssports.cloud/primpy/highlander/team/news?teamIds=${teamIds}&access_token=${accessToken}`;
-        
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        
-        const data = await response.json();
-        // console.log(data);
-
-        const promoTitle = data.data[0].promoTitle;
-        const author = data.data[0].author['name'];
-        const timestamp = getRandomHoursAgo();
-        const thumbnailURL = data.data[0].promoImage['path'];
-        const duration = getRandomDuration();
-
-        const articleInfo = new Article(promoTitle, thumbnailURL, author, timestamp, duration, teamName);
-        console.log(articleInfo);
-        return articleInfo;
-        
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
-} */
 
 async function fetchArticle(
   teamIds: string,
-  teamName: string
+  teamName: string,
+  league: string
 ): Promise<Article | null> {
   const url = `https://sdf-api.cbssports.cloud/primpy/highlander/team/news?teamIds=${teamIds}&access_token=${accessToken}`;
-
+  console.log(league);
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -321,6 +315,7 @@ async function fetchArticle(
     if (data.data.length === 0) {
       return null; // No articles found
     }
+    console.log(data);
 
     const promoTitle = data.data[0].promoTitle;
     const author = data.data[0].author["name"];
@@ -360,42 +355,8 @@ function getRandomDuration() {
   const formattedMinutes = minutes.toString().padStart(2, "0");
   return `${formattedHours}:${formattedMinutes}`;
 }
-/* 
-async function fetchValidArticle(league: string): Promise<Article | null> {
-  const seasonType = "regular";
-  const url = `https://sdf-api.cbssports.cloud/primpy/highlander/teams/league/${league}?seasonType=${seasonType}&access_token=${accessToken}`;
 
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
 
-    const data = await response.json();
-    const teamIds = data.data.map((team: { teamId: number }) => team.teamId);
-
-    let article: Article | null = null;
-
-    while (article === null) {
-      const randomTeamId = teamIds[Math.floor(Math.random() * teamIds.length)];
-      article = await fetchArticle(randomTeamId, league);
-
-      if (article === null) {
-        console.log(
-          "No article found for teamId:",
-          randomTeamId,
-          "Retrying..."
-        );
-      }
-    }
-
-    return article;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return null;
-  }
-}
- */
 async function fetchValidArticle(league: string): Promise<Article | null> {
     const seasonType = "regular";
     const url = `https://sdf-api.cbssports.cloud/primpy/highlander/teams/league/${league}?seasonType=${seasonType}&access_token=${accessToken}`;
@@ -408,7 +369,8 @@ async function fetchValidArticle(league: string): Promise<Article | null> {
   
       const data = await response.json();
       const teamIds = data.data.map((team: { teamId: number }) => team.teamId);
-  
+      console.log(teamIds);
+
       // Shuffle the teamIds array to randomize the order
       for (let i = teamIds.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -416,7 +378,7 @@ async function fetchValidArticle(league: string): Promise<Article | null> {
       }
   
       for (const teamId of teamIds) {
-        const article = await fetchArticle(teamId, league);
+        const article = await fetchArticle(teamId, teamId,league);
         if (article !== null) {
           return article;
         }

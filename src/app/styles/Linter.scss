@@ -1,0 +1,339 @@
+// @collapse
+@import './Variables.scss';
+
+@mixin pb_gradient($direction: to right) {
+  background: linear-gradient($direction, #2daae0, #0085ff, #0066fe);
+}
+
+@mixin linterFilters {
+  display: flex;
+  padding: map-get($spacing, 100);
+  align-items: center;
+  align-self: stretch;
+  gap: map-get($spacing, 100);
+  border-bottom: 1px solid theme-color($light-theme, utility, border_primary);
+}
+
+.linterFilters {
+  @include linterFilters;
+}
+@mixin linter_button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: map-get($spacing, 50);
+  padding: map-get($spacing, 50);
+  color: black;
+  background-color: theme-color($light-theme, surfaces, primary);
+  border: 1px solid theme-color($light-theme, utility, border_primary);
+  border-radius: map-get($radius, 4);
+
+  // &:active {
+  //   background-color: linear-gradient(to right, #2daae0, #0085ff, #0066fe);
+  //   border: 1px solid linear-gradient(to right, #2daae0, #0085ff, #0066fe);
+  // }
+}
+.linter_button {
+  @include linter_button;
+}
+
+@mixin active_linter_button {
+  color: white;
+  background: linear-gradient(#2daae0, #0085ff, #0066fe);
+  border: 1px solid linear-gradient(#2daae0, #0085ff, #0066fe);
+}
+
+.active_linter_button {
+  @include active_linter_button;
+}
+
+@mixin swatch {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  padding: map-get($spacing, 0);
+  justify-content: center;
+  align-items: center;
+  gap: map-get($spacing, 0);
+  border-radius: map-get($radius, 4);
+  border: 1px solid theme-color($light-theme, utility, border_primary);
+  background: theme-color($light-theme, surfaces, primary);
+}
+.swatch {
+  @include swatch;
+}
+
+@mixin textInfo {
+  display: flex;
+  // width: 137px;
+  padding: map-get($spacing, 0);
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: map-get($spacing, 50);
+}
+
+.textInfo {
+  @include textInfo;
+}
+@mixin tag {
+  display: flex;
+  padding: map-get($spacing, 25) map-get($spacing, 5);
+  justify-content: center;
+  align-items: center;
+  background-color: theme-color($light-theme, surfaces, secondary);
+  border-radius: map-get($radius, 4);
+}
+.tag {
+  @include tag;
+}
+@mixin primaryIssueText {
+  color: theme-color($light-theme, text, primary);
+  font-family: 'Recursive', sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.5; // Using a unitless number
+}
+.primaryIssueText {
+  @include primaryIssueText;
+}
+@mixin secondaryIssueText {
+  color: theme-color($light-theme, text, secondary);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.25; // Using a unitless number
+}
+.secondaryIssueText {
+  @include secondaryIssueText;
+}
+@mixin affectedLayersContainer {
+  display: inline-flex;
+  padding: map-get($spacing, 0);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.affectedLayersContainer {
+  @include affectedLayersContainer;
+}
+
+@mixin affectedLayersLabel {
+  color: theme-color($light-theme, text, tertiary);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.25; /* 15px */
+}
+
+.affectedLayersLabel {
+  @include affectedLayersLabel;
+}
+@mixin affectedLayersList {
+  display: flex;
+  width: 100%;
+  padding: map-get($spacing, 0);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: map-get($spacing, 0);
+  border-radius: map-get($radius, 4);
+  border: 1px solid theme-color($light-theme, utility, border_primary);
+}
+.affectedLayersList {
+  @include affectedLayersList;
+}
+
+@mixin affectedLayersItem {
+  display: flex;
+  padding: map-get($spacing, 50) map-get($spacing, 100);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: map-get($spacing, 0);
+  align-self: stretch;
+  color: theme-color($light-theme, text, primary);
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 125%; /* 15px */
+
+  &:active {
+    background: theme-color($light-theme, surfaces, status);
+  }
+}
+.affectedLayersItem {
+  @include affectedLayersItem;
+}
+.affectedLayersItem:hover {
+  cursor: pointer;
+  background-color: theme-color($light-theme, surfaces, status);
+}
+
+@mixin results {
+  width: 100%;
+  height: 100%;
+}
+
+.results {
+  @include results;
+}
+@mixin issueContainer {
+  display: flex;
+  // width: 100%;
+  padding: map-get($spacing, 100);
+  align-items: flex-start;
+  gap: map-get($spacing, 75);
+  border-bottom: 0.5px solid theme-color($light-theme, utility, border_primary);
+  background: theme-color($light-theme, surfaces, primary);
+}
+.issueContainer {
+  @include issueContainer;
+}
+
+@mixin mainContent {
+  display: flex;
+  padding: map-get($spacing, 0);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: map-get($spacing, 150);
+  flex: 1 0 0;
+}
+
+.mainContent {
+  @include mainContent;
+}
+
+@mixin rightContainer {
+  display: flex;
+  padding: map-get($spacing, 0);
+  align-items: flex-start;
+  gap: map-get($spacing, 50);
+  align-self: stretch;
+}
+.rightContainer {
+  @include rightContainer;
+}
+
+@mixin issueDropDown {
+  display: flex;
+  padding: map-get($spacing, 25) map-get($spacing, 50);
+  justify-content: center;
+  align-items: center;
+  border-radius: map-get($radius, 16);
+  gap: map-get($spacing, 25);
+  // background-color: pink;
+  background-color: theme-color($light-theme, surfaces, alert); // Ensure --Text-Alert is defined or fallback is correct
+  // background-color: theme-color($light-theme, surfaces, alert);
+  p {
+    color: theme-color($light-theme, text, alert); // Ensure --Text-Alert is defined or fallback is correct
+    font-family: 'Inter', sans-serif; // Added fallback font
+    // font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.25; // Using unitless number
+  }
+}
+.issueDropDown {
+  @include issueDropDown;
+}
+
+@mixin successContainer {
+  display: flex;
+  height: 100%;
+  padding: map-get($spacing, 0);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: map-get($spacing, 100);
+  flex: 1 0 0;
+  align-self: stretch;
+
+  p {
+    color: map-get($pb_gradient, c);
+    text-align: center;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%; /* 24px */
+  }
+}
+.successContainer {
+  @include successContainer();
+}
+@mixin successGraphic {
+  display: flex;
+  width: 100px;
+  height: 100px;
+  padding: map-get($spacing, 0);
+  justify-content: center;
+  align-items: center;
+  gap: map-get($spacing, 0);
+  border-radius: map-get($radius, circle);
+  background: theme-color($light-theme, surfaces, status);
+}
+
+.successGraphic {
+  @include successGraphic;
+}
+
+@mixin footer {
+  display: flex;
+  // width: 100%;
+  padding: map-get($spacing, 50) map-get($spacing, 100);
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  border-top: 1px solid theme-color($light-theme, utility, border_primary);
+  background: theme-color($light-theme, surfaces, primary);
+}
+
+.footer {
+  @include footer;
+}
+
+@mixin footer_issues {
+  display: inline-flex;
+  padding: map-get($spacing, 25) map-get($spacing, 50);
+  align-items: center;
+  gap: map-get($spacing, 50);
+  background-color: theme-color($light-theme, surfaces, alert);
+  border-radius: map-get($radius, 16);
+  p {
+    color: theme-color($light-theme, text, alert);
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 125%; /* 15px */
+  }
+}
+
+.footer_issues {
+  @include footer_issues;
+}
+
+@mixin footer_no_errors{
+display: inline-flex;
+  border-radius: map-get($radius, 16);
+
+  padding: map-get($spacing, 25) map-get($spacing, 50);
+  align-items: center;
+  gap: map-get($spacing, 50);
+  background-color: theme-color($light-theme, surfaces, positive);
+  p {
+    color: theme-color($light-theme, text, positive);
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 125%; /* 15px */
+  }
+}
+.footer_no_errors{
+@include footer_no_errors;
+}

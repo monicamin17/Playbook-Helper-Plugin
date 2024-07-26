@@ -1,0 +1,185 @@
+// @collapse
+@import './Variables.scss';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Recursive:wght@300..1000&display=swap');
+
+@mixin body {
+  background-color: theme-color($light-theme, surfaces, primary);
+  display: flex;
+  padding: map-get($spacing, 0);
+  align-items: flex-start;
+  gap: map-get($spacing, 0);
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#react-page {
+  width: 100%;
+}
+body {
+  @include body;
+}
+
+p {
+  margin: 0;
+  // font-weight: 500;
+  font-family: 'Inter';
+}
+.authenticationContainer {
+  @include body;
+}
+
+@mixin nav_panel {
+  display: flex;
+  // width: 120px;
+  // height: 100%;
+  padding: map-get($spacing, 50) map-get($spacing, 0);
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-shrink: 0;
+  align-self: stretch;
+  border-right: 1px solid theme-color($light-theme, utility, border_primary);
+  background: theme-color($light-theme, surfaces, primary);
+}
+
+.nav_panel {
+  @include nav_panel;
+}
+
+@mixin nav_top {
+  display: flex;
+  padding: map-get($spacing, 0);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: map-get($spacing, 100);
+  flex: 1 0 0;
+  align-self: stretch;
+}
+.nav_top {
+  @include nav_top;
+}
+
+@mixin title {
+  display: flex;
+  padding: map-get($spacing, 50) map-get($spacing, 75) map-get($spacing, 100) map-get($spacing, 75);
+  justify-content: space-between;
+  gap: map-get($spacing, 100);
+  align-items: center;
+  align-self: stretch;
+  border-bottom: 1px solid theme-color($light-theme, utility, border_primary);
+  font-size: 14px;
+}
+
+.title {
+  @include title;
+}
+@mixin icon_panel_open {
+  display: flex;
+  padding: 8px;
+  align-items: center;
+  border-radius: map-get($radius, 2);
+  border: none;
+  background: theme-color($light-theme, surfaces, primary);
+
+}
+.icon_panel_open {
+  @include icon_panel_open;
+}
+
+@mixin icon_panel_close {
+  display: flex;
+  padding: map-get($spacing, 50);
+  align-items: center;
+  border-radius: map-get($radius, 2);
+  border: 1px solid theme-color($light-theme, utility, border_primary);
+  background: theme-color($light-theme, surfaces, secondary);
+}
+.icon_panel_close {
+  @include icon_panel_close;
+}
+@mixin menu_items {
+  display: flex;
+  padding: map-get($spacing, 0) map-get($spacing, 75);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: map-get($spacing, 25);
+  flex: 1 0 0;
+  align-self: stretch;
+}
+.menu_items {
+  @include menu_items;
+}
+@mixin menu_item {
+  display: flex;
+  width: 100%;
+  padding: map-get($spacing, 25) map-get($spacing, 0) map-get($spacing, 25) map-get($spacing, 50);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: map-get($spacing, 0);
+  color: theme-color($light-theme, text, secondary);
+  font-family: 'Inter';
+  font-size: 12px;
+  font-weight: 500;
+
+  line-height: 150%;
+}
+
+.menu_item {
+  @include menu_item;
+}
+
+.menu_item:hover {
+  cursor: pointer;
+}
+
+@mixin activeNav {
+  display: flex;
+  width: 100%;
+  padding: map-get($spacing, 25) map-get($spacing, 0) map-get($spacing, 25) map-get($spacing, 50);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: map-get($spacing, 0);
+  border-radius: map-get($radius, 4);
+  background: theme-color($light-theme, surfaces, secondary);
+  font-weight: 500;
+  line-height: 150%;
+  color: theme-color($light-theme, text, primary);
+}
+
+.activeNav {
+  @include activeNav;
+}
+
+@mixin about_container {
+  display: flex;
+  padding: map-get($spacing, 0) map-get($spacing, 75);
+  align-items: center;
+  gap: map-get($spacing, 50);
+  align-self: stretch;
+  font-size: 12px;
+  font-weight: 500;
+  color: theme-color($light-theme, text, secondary);
+}
+
+.about_container {
+  @include about_container;
+}
+@mixin about_icon{
+  fill: theme-color($light-theme, utility, icon_primary);
+}
+
+@mixin rightBody {
+  display: flex;
+  padding: map-get($spacing, 0);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: map-get($spacing, 0);
+  flex: 1 0 0;
+  align-self: stretch;
+  // height: 100%;
+}
+
+.rightBody {
+  @include rightBody;
+}
