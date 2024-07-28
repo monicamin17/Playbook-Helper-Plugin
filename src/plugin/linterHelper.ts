@@ -16,7 +16,9 @@ export async function checkColors(
 ) {
   if (!Array.isArray(colors) || colors.length === 0) return;
   for (const color of colors) {
+    if (color.type === 'IMAGE') return;
     if (checkColorsType(color, styleId)) {
+      console.log('color: ', color);
       console.log('color.color: ', color.color);
       if(color.color){
         await Hex.manageHex([color.color], node);
@@ -74,6 +76,8 @@ export async function resetData() {
 
 // If user lints for spacing, start the functions
 export async function startSpacing(node: any) {
+  console.log(node.type);
+  if(Helper.isTextNode(node) || node.type === 'VECTOR' || node.type === 'BOOLEAN_OPERATION' || node.type === 'GROUP') return; 
   Spacing.checkRadius(node);
 
   // Only frames in autolayout can have padding/spacing

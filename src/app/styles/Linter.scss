@@ -7,6 +7,8 @@
 
 @mixin linterFilters {
   display: flex;
+  scrollbar-width: none;
+  overflow-x: auto;
   padding: map-get($spacing, 100);
   align-items: center;
   align-self: stretch;
@@ -27,11 +29,11 @@
   background-color: theme-color($light-theme, surfaces, primary);
   border: 1px solid theme-color($light-theme, utility, border_primary);
   border-radius: map-get($radius, 4);
+  transition: background-color 0.2s ease-in-out;
 
-  // &:active {
-  //   background-color: linear-gradient(to right, #2daae0, #0085ff, #0066fe);
-  //   border: 1px solid linear-gradient(to right, #2daae0, #0085ff, #0066fe);
-  // }
+  &:hover{
+    background-color: theme-color($light-theme, surfaces, secondary);
+  }
 }
 .linter_button {
   @include linter_button;
@@ -65,7 +67,6 @@
 
 @mixin textInfo {
   display: flex;
-  // width: 137px;
   padding: map-get($spacing, 0);
   flex-direction: column;
   justify-content: center;
@@ -78,7 +79,7 @@
 }
 @mixin tag {
   display: flex;
-  padding: map-get($spacing, 25) map-get($spacing, 5);
+  padding: map-get($spacing, 25) map-get($spacing, 50);
   justify-content: center;
   align-items: center;
   background-color: theme-color($light-theme, surfaces, secondary);
@@ -93,7 +94,7 @@
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
-  line-height: 1.5; // Using a unitless number
+  line-height: 1.5;
 }
 .primaryIssueText {
   @include primaryIssueText;
@@ -104,7 +105,7 @@
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
-  line-height: 1.25; // Using a unitless number
+  line-height: 1.25;
 }
 .secondaryIssueText {
   @include secondaryIssueText;
@@ -115,6 +116,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
+  width: 100%;
 }
 
 .affectedLayersContainer {
@@ -161,7 +163,7 @@
   font-weight: 500;
   line-height: 125%; /* 15px */
 
-  &:active {
+  &.active {
     background: theme-color($light-theme, surfaces, status);
   }
 }
@@ -175,7 +177,9 @@
 
 @mixin results {
   width: 100%;
-  height: 100%;
+  flex: 1; 
+  overflow-y: auto;
+  scrollbar-width: none;
 }
 
 .results {
@@ -183,7 +187,6 @@
 }
 @mixin issueContainer {
   display: flex;
-  // width: 100%;
   padding: map-get($spacing, 100);
   align-items: flex-start;
   gap: map-get($spacing, 75);
@@ -225,20 +228,20 @@
   align-items: center;
   border-radius: map-get($radius, 16);
   gap: map-get($spacing, 25);
-  // background-color: pink;
-  background-color: theme-color($light-theme, surfaces, alert); // Ensure --Text-Alert is defined or fallback is correct
-  // background-color: theme-color($light-theme, surfaces, alert);
+  background-color: theme-color($light-theme, surfaces, alert);
   p {
-    color: theme-color($light-theme, text, alert); // Ensure --Text-Alert is defined or fallback is correct
-    font-family: 'Inter', sans-serif; // Added fallback font
-    // font-size: 12px;
+    color: theme-color($light-theme, text, alert);
+    font-family: 'Inter', sans-serif;
     font-style: normal;
     font-weight: 500;
-    line-height: 1.25; // Using unitless number
+    line-height:1.25;
   }
 }
 .issueDropDown {
   @include issueDropDown;
+}
+.issueDropDown:hover{
+  cursor: pointer;
 }
 
 @mixin successContainer {
@@ -269,7 +272,7 @@
   display: flex;
   width: 100px;
   height: 100px;
-  padding: map-get($spacing, 0);
+  padding: map-get($spacing, 125);
   justify-content: center;
   align-items: center;
   gap: map-get($spacing, 0);
@@ -283,13 +286,13 @@
 
 @mixin footer {
   display: flex;
-  // width: 100%;
   padding: map-get($spacing, 50) map-get($spacing, 100);
   justify-content: space-between;
   align-items: center;
   align-self: stretch;
   border-top: 1px solid theme-color($light-theme, utility, border_primary);
   background: theme-color($light-theme, surfaces, primary);
+  position: relative;
 }
 
 .footer {
@@ -336,4 +339,14 @@ display: inline-flex;
 }
 .footer_no_errors{
 @include footer_no_errors;
+}
+
+@mixin selectAllContainer{
+  &:hover{
+    cursor: pointer;
+  }
+}
+
+.selectAllContainer{
+  @include selectAllContainer;
 }

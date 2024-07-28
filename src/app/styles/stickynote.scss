@@ -1,0 +1,89 @@
+@import "./Variables.scss";
+
+@mixin stickyNoteResults {
+  display: flex;
+  padding: map-get($spacing, 150);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: map-get($spacing, 250);
+  flex: 1 0 0;
+  align-self: stretch;
+}
+
+.stickyNoteResults {
+  @include stickyNoteResults;
+}
+
+@mixin stickyNoteInfo{
+    display: flex;
+    flex-direction: column;
+    gap: map-get($spacing, 100);
+
+}
+.stickyNoteInfo{
+    @include stickyNoteInfo;
+}
+
+@mixin stickyNoteTitle {
+  flex: 1 0 0;
+  color: theme-color($light-theme, text, primary);
+  font-family: 'Inter';
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 100%; /* 20px */
+  letter-spacing: -0.4px;
+}
+
+.stickyNoteTitle {
+  @include stickyNoteTitle;
+}
+@mixin allColorsContainer {
+  display: flex;
+  padding: map-get($spacing, 0);
+  justify-content: space-between;
+  align-items: flex-start;
+  align-content: flex-start;
+  row-gap: map-get($spacing, 250);
+  align-self: stretch;
+  flex-wrap: wrap;
+}
+
+.allColorsContainer {
+  @include allColorsContainer;
+}
+@mixin colorContainer {
+  display: flex;
+  flex-direction: column;
+  gap: map-get($spacing, 75);
+  align-items: flex-start;
+
+  p {
+    color: theme-color($light-theme, text, primary);
+    font-family: "Inter";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%; /* 18px */
+  }
+}
+
+.colorContainer {
+  @include colorContainer;
+}
+
+@mixin colorBox {
+  width: 150px;
+  height: 150px;
+  border-radius: map-get($radius, 4);
+  border: 1px solid theme-color($light-theme, utility, border_primary);
+  transition: filter 0.2s ease-in-out; // Smooth transition for the filter
+
+  &:hover {
+    filter: brightness(90%);
+  }
+}
+
+.colorBox {
+  @include colorBox;
+}

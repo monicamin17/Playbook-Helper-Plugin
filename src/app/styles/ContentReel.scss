@@ -1,0 +1,244 @@
+// @collapse
+@import './Variables.scss';
+@mixin contentReelBody {
+  display: flex;
+  flex-direction: column;
+  //   gap: map-get($spacing, 250);
+  align-self: stretch;
+  justify-content: space-between;
+  // height: 100%;
+  height: 100vh
+}
+@mixin frame_item{
+  margin: 0;
+  font-family: 'Inter';
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  gap: map-get($spacing, 100);
+
+  // font-size: 16px;
+  h4, h5{
+    margin: 0;
+  font-family: 'Inter';
+  font-weight: 600;
+  }
+
+
+}
+.frame_item{
+  @include frame_item;
+}
+
+@mixin frameNodes{
+  display: flex;
+  flex-direction:column;
+  gap: map-get($spacing, 75);
+}
+.text-nodes, .image-nodes{
+@include frameNodes;
+}
+.contentReelBody {
+  @include contentReelBody;
+}
+
+@mixin contentReelResults {
+  padding: map-get($spacing, 100);
+  flex: 1;
+  overflow-y : auto;
+}
+.contentReelResults {
+  @include contentReelResults;
+}
+
+@mixin titleContainer {
+  display: flex;
+  padding: map-get($spacing, 0);
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: map-get($spacing, 50);
+  align-self: stretch;
+}
+
+.titleContainer {
+  @include titleContainer;
+}
+
+@mixin layerTitle {
+  color: theme-color($light-theme, text, primary);
+  font-family: 'Inter';
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 100%; /* 20px */
+  letter-spacing: -0.4px;
+  margin: 0;
+}
+.layerTitle {
+  @include layerTitle;
+}
+
+@mixin description {
+  color: theme-color($light-theme, text, secondary);
+  font-family: 'Inter';
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 125%; /* 15px */
+  flex: 1 0 0;
+}
+.description {
+  @include description;
+}
+
+@mixin content_container {
+  display: flex;
+  padding: map-get($spacing, 0);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: map-get($spacing, 125);
+  align-self: stretch;
+}
+.content_container {
+  @include content_container;
+}
+
+@mixin layerContainer {
+  display: flex;
+  width: fit-content;
+  padding: map-get($spacing, 50) map-get($spacing, 75) map-get($spacing, 50) map-get($spacing, 50);
+  align-items: center;
+  gap: map-get($spacing, 50);
+  border-radius: map-get($radius, 4);
+  border: 1px solid map-get($pb_gradient, c);
+  background: theme-color($light-theme, surfaces, status);
+}
+.layerContainer {
+  @include layerContainer;
+}
+@mixin text_info {
+  display: flex;
+  padding: map-get($spacing, 0);
+  align-items: center;
+  gap: map-get($spacing, 25);
+}
+
+.text_info {
+  @include text_info;
+}
+@mixin layerIcon {
+  width: 14px;
+  height: 14px;
+}
+.layerIcon {
+  @include layerIcon;
+}
+@mixin contentReel_submit {
+  display: inline-flex;
+  width: 100%;
+  padding: map-get($spacing, 75) map-get($spacing, 125);
+  justify-content: center;
+  align-items: center;
+  gap: map-get($spacing, 25);
+
+  border: 0;
+  border-radius: map-get($radius, 4);
+  background: linear-gradient(#2daae0, #0085ff, #0066fe);
+  color: white;
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:disabled {
+    background: theme-color($light-theme, text, disabled);
+    color: white; /* Adjust text color for disabled state */
+    cursor: not-allowed;
+
+    pointer-events: none;
+  }
+}
+
+.contentReel_submit {
+  @include contentReel_submit;
+}
+
+@mixin contentReel_submitContainer {
+  display: flex;
+  padding: map-get($spacing, 100) map-get($spacing, 150);
+  align-items: center;
+  gap: map-get($spacing, 100);
+  align-self: stretch;
+  border-top: 1px solid theme-color($light-theme, utility, border_primary);
+  background: theme-color($light-theme, surfaces, primary);
+  position: relative;
+}
+
+.contentReel_submitContainer {
+  @include contentReel_submitContainer;
+}
+/* ************** */
+// /* Custom properties */
+:root {
+  --tooltip-text-color: white;
+  --tooltip-background-color: black;
+  --tooltip-margin: 30px;
+  --tooltip-arrow-size: 6px;
+}
+
+/* Wrapping */
+.options_container-Wrapper {
+  display: inline-block;
+  position: relative;
+  // display: flex;
+  // flex-direction: column;
+  // gap: map-get($spacing, 150);
+}
+.option_wrapper {
+  display: flex; /* Make sure the tooltip is visible without any trigger */
+  flex-wrap: wrap;
+  gap: map-get($spacing, 50);
+}
+
+//   /* Absolute positioning */
+.Tooltip-Tip {
+  border-radius: map-get($radius, 4);
+  // left: 50%;
+  padding: map-get($spacing, 100);
+  color: theme-color($light-theme, text, secondary);
+  background: theme-color($light-theme, surfaces, secondary);
+  border: 1px solid theme-color($light-theme, utility, border_primary);
+  font-size: 14px;
+  font-family: sans-serif;
+  line-height: 1;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  gap: map-get($spacing, 150);
+  // position: absolute;
+}
+
+/* CSS border triangles */
+.Tooltip-Tip::before {
+  content: ' ';
+  left: map-get($spacing, 300);
+  border: solid transparent;
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-width: var(--tooltip-arrow-size);
+  margin-left: calc(var(--tooltip-arrow-size) * -1);
+  transform: translateX(-50%);
+}
+
+/* Positioning the tooltip above */
+.Tooltip-Tip.bottom {
+  bottom: calc(var(--tooltip-margin) * -1);
+}
+
+/* CSS border triangles for tooltip pointing upwards */
+.Tooltip-Tip.bottom::before {
+  bottom: 100%;
+  border-bottom-color: theme-color($light-theme, utility, border_primary);
+}

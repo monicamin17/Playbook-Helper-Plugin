@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/LinterOptions.css';
+// import '../styles/LinterOptions.css';
 
 function ContentReelOptions({ onClick }) {
   return (
