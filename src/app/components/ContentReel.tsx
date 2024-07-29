@@ -163,6 +163,12 @@ function ContentReel({ results }: ContentReelProps) {
   return (
     <div className={"contentReelBody"}>
       <div className="contentReelResults">
+        {((!results.text || results.text?.length === 0) && (!results.image || results.image?.length === 0) && (!results.frames || Object.keys(results.frames).length === 0)) && (
+          <div className='empty_content_container'>
+            <p>No text or image layers found. Please try again.</p>
+          </div>
+        )}
+
         {results.text && Array.isArray(results.text) &&  results.text.length > 0 && (
           <div className={"content_container"} ref={textRef}>
             <div className={"titleContainer"}>
@@ -186,7 +192,7 @@ function ContentReel({ results }: ContentReelProps) {
           <div className={"content_container"} ref={imageRef}>
             <div className={"titleContainer"}>
               <h3 className="layerTitle">Image Layers</h3>
-              <p className="description">Selected at least 1 layer.</p>
+              <p className="description">Select at least one layer to update its content.</p>
             </div>
             <div className={"list"}>
               {results.image.map((item) => (
@@ -207,12 +213,12 @@ function ContentReel({ results }: ContentReelProps) {
             <div className={"content_container"} ref={framesRef}>
               <div className={"titleContainer"}>
                 <h3 className="layerTitle">Frames</h3>
-                <p className="description">Selected at least 1 frame.</p>
+                <p className="description">Select at least one layer to update its content.</p>
               </div>
               <div className={"list"}>
                 {Object.entries(results.frames).map(([frameId, frameData]) => (
                   <div key={frameId} className={"frame_item"}>
-                    <h4>Frame: {frameData.parentFrameName}</h4>
+                    <h4>{frameData.parentFrameName}</h4>
                     {frameData.textNodes && frameData.textNodes.length > 0 && (
                       <div className={"text-nodes"}>
                         <h5>Text Nodes</h5>

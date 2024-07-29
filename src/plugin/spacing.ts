@@ -6,6 +6,7 @@ export let topRightRadiusMap = new Map();
 export let radiusMap = new Map();
 
 export let itemSpacingMap = new Map();
+export let counterAxisSpacing = new Map();
 export let paddingLeftMap = new Map();
 export let paddingRightMap = new Map();
 export let paddingSidesMap = new Map();
@@ -18,15 +19,24 @@ export let paddingTopBottomMap = new Map();
 
 export async function checkSpacing(node: any) {
   let boundVariables = node["boundVariables"];
+  console.log('boundVariables: ', boundVariables);
+  // verticalspacing - itemSpacing
+  // horizontalspacing - counterAxisSpacing
+
   let verticalSpacing = false;
   let horizontalSpacing = false;
 
   // No item spacing
   if (boundVariables["itemSpacing"] === undefined && node.itemSpacing !== 0) {
-    addToMap(itemSpacingMap, node.itemSpacing,  node.name, node.id, "Item Spacing Missing");
+    addToMap(itemSpacingMap, node.itemSpacing,  node.name, node.id, "Horizontal Spacing");
   }
 
-  // Side paddings missing
+  // No item spacing
+  if (boundVariables["counterAxisSpacing"] === undefined && node.counterAxisSpacing !== 0) {
+    addToMap(counterAxisSpacing, node.counterAxisSpacing,  node.name, node.id, "Vertical Spacing");
+  }
+
+  // Side paddings
   if (
     boundVariables["paddingLeft"] === undefined &&
     boundVariables["paddingRight"] === undefined &&
@@ -37,29 +47,29 @@ export async function checkSpacing(node: any) {
       paddingSidesMap,
       node.paddingLeft,
        node.name, node.id,
-      "Side Padding Missing"
+      "Side Padding"
     );
     horizontalSpacing = true;
     
   }
 
   if(!horizontalSpacing){
-    // Left padding missing
+    // Left padding
     if (boundVariables["paddingLeft"] === undefined && node.paddingLeft !== 0) {
-      addToMap(paddingLeftMap, node.paddingLeft, node.name, node.id, "Left Padding Missing");
+      addToMap(paddingLeftMap, node.paddingLeft, node.name, node.id, "Left Padding");
     }
 
-    // Right padding missing
+    // Right padding
     if (boundVariables["paddingRight"] === undefined && node.paddingRight !== 0) {
       addToMap(
         paddingRightMap,
         node.paddingRight,
         node.name, node.id,
-        "Right Padding Missing"
+        "Right Padding"
       );
     }
   }
-  // Top/Bottom padding missing
+  // Top/Bottom padding
   if (
     boundVariables["paddingTop"] === undefined &&
     boundVariables["paddingBottom"] === undefined &&
@@ -70,18 +80,18 @@ export async function checkSpacing(node: any) {
       paddingTopBottomMap,
       node.paddingBottom,
        node.name, node.id,
-      "Top/Bottom Padding Missing"
+      "Top/Bottom Padding"
     );
     verticalSpacing = true;
   }
 
   if(!verticalSpacing){
-    // Top padding missing
+    // Top padding
     if (boundVariables["paddingTop"] === undefined && node.paddingTop !== 0) {
-      addToMap(paddingTopMap, node.paddingTop,  node.name, node.id, "Top Padding Missing");
+      addToMap(paddingTopMap, node.paddingTop,  node.name, node.id, "Top Padding");
     }
 
-    // Bottom padding missing
+    // Bottom padding
     if (
       boundVariables["paddingBottom"] === undefined &&
       node.paddingBottom !== 0
@@ -90,7 +100,7 @@ export async function checkSpacing(node: any) {
         paddingBottomMap,
         node.paddingBottom,
         node.name, node.id,
-        "Bottom Padding Missing"
+        "Bottom Padding"
       );
     }
   }
@@ -101,7 +111,7 @@ export async function checkRadius(node: any) {
   console.log(node);
   if(node.type === 'VECTOR'){
     if(node.cornerRadius !== 0){
-      addToMap(radiusMap, node.cornerRadius,  node.name, node.id, "Radius missing");
+      addToMap(radiusMap, node.cornerRadius,  node.name, node.id, "Radius");
     }
 
     // Vectors don't have any other type of radius, so return
@@ -120,7 +130,7 @@ export async function checkRadius(node: any) {
     node.bottomLeftRadius === node.topRightRadius &&
     node.bottomLeftRadius !== 0
   ) {
-    addToMap(radiusMap, node.bottomLeftRadius,  node.name, node.id, "Radius missing");
+    addToMap(radiusMap, node.bottomLeftRadius,  node.name, node.id, "Radius");
     return;
   }
 
@@ -132,7 +142,7 @@ export async function checkRadius(node: any) {
       bottomLeftRadiusMap,
       node.bottomLeftRadius,
        node.name, node.id,
-      "Bottom Left Radius missing"
+      "Bottom Left Radius"
     );
   }
 
@@ -144,7 +154,7 @@ export async function checkRadius(node: any) {
       bottomRightRadiusMap,
       node.bottomRightRadius,
        node.name, node.id,
-      "Bottom Right Radius missing"
+      "Bottom Right Radius"
     );
   }
 
@@ -156,7 +166,7 @@ export async function checkRadius(node: any) {
       topLeftRadiusMap,
       node.topLeftRadius,
        node.name, node.id,
-      "Top Left Radius missing"
+      "Top Left Radius"
     );
   }
 
@@ -168,7 +178,7 @@ export async function checkRadius(node: any) {
       topRightRadiusMap,
       node.topRightRadius,
        node.name, node.id,
-      "Top Right Radius missing"
+      "Top Right Radius"
     );
   }
 

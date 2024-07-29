@@ -77,7 +77,7 @@ export async function resetData() {
 // If user lints for spacing, start the functions
 export async function startSpacing(node: any) {
   console.log(node.type);
-  if(Helper.isTextNode(node) || node.type === 'VECTOR' || node.type === 'BOOLEAN_OPERATION' || node.type === 'GROUP') return; 
+  if(Helper.isTextNode(node) || node.type === 'VECTOR' || node.type === 'BOOLEAN_OPERATION' || node.type === 'GROUP' || node.type === 'LINE') return; 
   Spacing.checkRadius(node);
 
   // Only frames in autolayout can have padding/spacing
@@ -97,6 +97,7 @@ export async function sendResultsToUI() {
     topRightRadiusMap?: any[];
     radiusMap?: any[];
     itemSpacingMap?: any[];
+    counterAxisSpacing?: any[];
     paddingLeftMap?: any[];
     paddingRightMap?: any[];
     paddingSidesMap?: any[];
@@ -153,6 +154,10 @@ console.log(results);
 
     if (Spacing.itemSpacingMap.size > 0) {
       results.itemSpacingMap = Array.from(Spacing.itemSpacingMap.entries());
+    }
+
+    if (Spacing.counterAxisSpacing.size > 0) {
+      results.counterAxisSpacing = Array.from(Spacing.counterAxisSpacing.entries());
     }
 
     if (Spacing.paddingLeftMap.size > 0) {

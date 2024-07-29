@@ -117,11 +117,13 @@
   align-items: flex-start;
   gap: 8px;
   width: 100%;
+
 }
 
 .affectedLayersContainer {
   @include affectedLayersContainer;
 }
+
 
 @mixin affectedLayersLabel {
   color: theme-color($light-theme, text, tertiary);
@@ -349,4 +351,12 @@ display: inline-flex;
 
 .selectAllContainer{
   @include selectAllContainer;
+}
+
+@mixin rotatedIcon{
+  transform: rotate(180deg);
+}
+
+.rotated{
+  @include rotatedIcon();
 }

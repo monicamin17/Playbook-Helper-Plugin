@@ -1,6 +1,6 @@
 // App.js
 import React, { useState, useEffect } from 'react';
-import Authentication from './Authentication';
+// import Authentication from './Authentication';
 import Navigation from './Navigation';
 import LinterOptions from './LinterOptions';
 import Results from './Results';
@@ -8,7 +8,7 @@ import ContentReel from './ContentReel'; // Import the ContentReel component
 import StickyNote from './StickyNote'; // Import the StickyNote component
 
 function App() {
-  const [authenticated, setAuthenticated] = useState(false);
+  // const [authenticated, setAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState('linter');
   const [results, setResults] = useState({});
   const [loading, setLoading] = useState(false);
@@ -24,7 +24,7 @@ function App() {
 
       switch (type) {
         case 'tokenSaved':
-          setAuthenticated(true);
+          // setAuthenticated(true);
           break;
         case 'invalidToken':
           // Handle invalid token
@@ -45,9 +45,9 @@ function App() {
     };
   }, []);
 
-  const handleTokenSubmit = (token) => {
-    parent.postMessage({ pluginMessage: { type: 'saveToken', token } }, '*');
-  };
+  // const handleTokenSubmit = (token) => {
+  //   parent.postMessage({ pluginMessage: { type: 'saveToken', token } }, '*');
+  // };
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -62,10 +62,10 @@ function App() {
   };
 
   return (
-    <div className={'authenticationContainer'}>
-      {!authenticated ? (
-        <Authentication onSubmit={handleTokenSubmit} />
-      ) : (
+    // <div className={'authenticationContainer'}>
+    //   {!authenticated ? (
+    //     <Authentication onSubmit={handleTokenSubmit} />
+    //   ) : (
         <>
           <Navigation
             activeTab={activeTab}
@@ -133,8 +133,8 @@ function App() {
             ) : null}
           </div>
         </>
-      )}
-    </div>
+    //   )}
+    // </div>
   );
 }
 

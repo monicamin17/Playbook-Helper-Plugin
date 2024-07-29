@@ -3,8 +3,8 @@ import * as Styles from "./styles";
 import * as Helper from "@figma-plugin/helpers";
 import * as Utilities from "@create-figma-plugin/utilities";
 import * as ContentReel from "./contentReel";
-import * as API from "./access";
-import * as Authenticate from "./authentication";
+// import * as API from "./access";
+// import * as Authenticate from "./authentication";
 import * as StickyNote from "./stickynote";
 // Constants
 const UI_WIDTH = 500;
@@ -19,30 +19,26 @@ figma.showUI(__html__);
 figma.ui.resize(UI_WIDTH, UI_HEIGHT);
 
 // Test -- reset data
-// figma.clientStorage.deleteAsync("figmaToken");
-// figma.clientStorage.deleteAsync("keyMap");
+figma.clientStorage.deleteAsync("figmaToken");
+figma.clientStorage.deleteAsync("keyMap");
 
 init();
 
 // Message handler
 figma.ui.onmessage = async (msg) => {
-  console.log("THIS WORKS");
-  console.log("changes show up");
-  console.log(msg);
-  console.log(msg.type);
-  console.log(msg.value);
-  // console.log(msg.value[0]);
-  // console.log(msg.value[0].id);
+  // console.log(msg);
+  // console.log(msg.type);
+  // console.log(msg.value);
 
   switch (msg.type) {
-    case "saveToken":
-      await Authenticate.saveToken(msg.token);
-      figma.ui.postMessage({ type: "tokenSaved" });
-      break;
-    case "getToken":
-      const token = await Authenticate.getToken();
-      figma.ui.postMessage({ type: "token", token });
-      break;
+    // case "saveToken":
+    //   await Authenticate.saveToken(msg.token);
+    //   figma.ui.postMessage({ type: "tokenSaved" });
+    //   break;
+    // case "getToken":
+    //   const token = await Authenticate.getToken();
+    //   figma.ui.postMessage({ type: "token", token });
+    //   break;
     case 'stickyNote':
       await StickyNote.default(msg.value);
       break;
@@ -211,7 +207,7 @@ async function checkNodeColors(node: SceneNode) {
 
 // Design Linter: Ignore components if they are from the Assets Library
 // Content Reel: Should not ignore any components
-async function checkComponent(node: any): Promise<boolean> {
+/* async function checkComponent(node: any): Promise<boolean> {
   if (Helper.isInstanceNode(node)) {
     node = await (node as InstanceNode).getMainComponentAsync();
   }
@@ -233,4 +229,22 @@ async function checkComponent(node: any): Promise<boolean> {
       return false;
     }
   }
-}
+} */
+
+  async function checkComponent(node: any): Promise<boolean> {
+    // Will check if the node has the word "@PLAYBOOK_HELPER_SKIPCOMPONENT" in it's description -> keyword to skip
+    if (Helper.isInstanceNode(node)) {
+      node = await (node as InstanceNode).getMainComponentAsync();
+    }
+
+    if (Helper.isComponentNode(node) && node.parent?.type === 'COMPONENT_SET') {
+      node = node.parent;
+    }
+  
+    if (node.type === 'COMPONENT_SET' || node !== null) {
+      if ((node as ComponentSetNode).description?.includes('TEAMLOGO')) {
+        return true;
+      }
+    }
+    return false;
+  }

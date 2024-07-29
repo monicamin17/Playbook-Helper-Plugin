@@ -5,7 +5,7 @@ const ContentReelOptionsList = ({ options, onOptionSelect }) => {
   return (
     <div className="options_container-Wrapper">
       <div className={`Tooltip-Tip bottom`}>
-        Replace with: 
+        <p>Replace with:</p>
         <div className='option_wrapper'>
         {options.map((option) => (
           <button key={option} onClick={() => onOptionSelect(option)} className="layerContainer">

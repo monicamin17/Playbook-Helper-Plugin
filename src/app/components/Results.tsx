@@ -21,6 +21,7 @@ function Results({ results, choice }) {
   ];
   const spacingMapTypes = [
     "itemSpacingMap",
+    "counterAxisSpacing",
     "paddingLeftMap",
     "paddingRightMap",
     "paddingSidesMap",
@@ -31,25 +32,29 @@ function Results({ results, choice }) {
 
   // Calculate total number of issues
   const getTotalIssues = () => {
-    return (
-      [
-        ...cornerMapTypes,
-        ...spacingMapTypes,
-        "hexColors",
-        "missingStyles",
-      ].reduce((total, key) => {
-        if (Array.isArray(results[key])) {
-          return total + results[key].length;
-        }
-        return total;
-      }, 0) +
-      (results.missingVariables
-        ? results.missingVariables.reduce(
-            (sum, item) => sum + item[1].length,
-            0
-          )
-        : 0)
-    );
+    // Extracting the counts from the various issue types
+    const totalIssues = [
+      ...cornerMapTypes, // Assuming this is an array
+      ...spacingMapTypes, // Assuming this is an array
+      "hexColors", // This is a string key for results
+      "missingStyles", // This is a string key for results
+    ].reduce((total, key) => {
+      // Check if the key is present in results and is an array
+      if (Array.isArray(results[key])) {
+        return total + results[key].length;
+      }
+      return total;
+    }, 0);
+
+    // Handle `missingVariables` separately, as it has nested arrays
+    const missingVariablesCount = results.missingVariables
+      ? results.missingVariables.reduce(
+          (sum, item) => sum + (Array.isArray(item) ? item[1].length : 0),
+          0
+        )
+      : 0;
+
+    return totalIssues + missingVariablesCount;
   };
 
   const totalIssues = getTotalIssues();
@@ -103,8 +108,8 @@ function Results({ results, choice }) {
                 )) || []
             )}
 
-            {spacingMapTypes.flatMap(
-              (mapType) =>
+            {spacingMapTypes.flatMap((mapType) => {
+              return (
                 results[mapType]?.map((item, index) => (
                   <ListItem
                     key={`${mapType}-${index}`}
@@ -112,7 +117,8 @@ function Results({ results, choice }) {
                     type={mapType.replace("Map", "")}
                   />
                 )) || []
-            )}
+              );
+            })}
           </>
         )}
       </div>

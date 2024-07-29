@@ -1,5 +1,5 @@
 // @collapse
-@import './Variables.scss';
+@import "./Variables.scss";
 @mixin contentReelBody {
   display: flex;
   flex-direction: column;
@@ -7,36 +7,54 @@
   align-self: stretch;
   justify-content: space-between;
   // height: 100%;
-  height: 100vh
+  height: 100vh;
 }
-@mixin frame_item{
+
+@mixin empty_content_container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  p{
+    font-family: 'Inter';
+    font-size: 12px;
+    color: theme-color($light-theme, text, secondary);
+  }
+}
+
+.empty_content_container{
+  @include empty_content_container;
+}
+
+@mixin frame_item {
   margin: 0;
-  font-family: 'Inter';
+  font-family: "Inter";
   font-weight: 600;
   display: flex;
   flex-direction: column;
   gap: map-get($spacing, 100);
 
   // font-size: 16px;
-  h4, h5{
+  h4,
+  h5 {
     margin: 0;
-  font-family: 'Inter';
-  font-weight: 600;
+    font-family: "Inter";
+    font-weight: 600;
   }
-
-
 }
-.frame_item{
+.frame_item {
   @include frame_item;
 }
 
-@mixin frameNodes{
+@mixin frameNodes {
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
   gap: map-get($spacing, 75);
 }
-.text-nodes, .image-nodes{
-@include frameNodes;
+.text-nodes,
+.image-nodes {
+  @include frameNodes;
 }
 .contentReelBody {
   @include contentReelBody;
@@ -45,7 +63,7 @@
 @mixin contentReelResults {
   padding: map-get($spacing, 100);
   flex: 1;
-  overflow-y : auto;
+  overflow-y: auto;
 }
 .contentReelResults {
   @include contentReelResults;
@@ -67,7 +85,7 @@
 
 @mixin layerTitle {
   color: theme-color($light-theme, text, primary);
-  font-family: 'Inter';
+  font-family: "Inter";
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -81,7 +99,7 @@
 
 @mixin description {
   color: theme-color($light-theme, text, secondary);
-  font-family: 'Inter';
+  font-family: "Inter";
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -107,7 +125,8 @@
 @mixin layerContainer {
   display: flex;
   width: fit-content;
-  padding: map-get($spacing, 50) map-get($spacing, 75) map-get($spacing, 50) map-get($spacing, 50);
+  padding: map-get($spacing, 50) map-get($spacing, 75) map-get($spacing, 50)
+    map-get($spacing, 50);
   align-items: center;
   gap: map-get($spacing, 50);
   border-radius: map-get($radius, 4);
@@ -122,17 +141,45 @@
   padding: map-get($spacing, 0);
   align-items: center;
   gap: map-get($spacing, 25);
+
+  p {
+    color: theme-color($light-theme, text, primary);
+    font-family: 'Inter';
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+  }
 }
 
 .text_info {
   @include text_info;
 }
 @mixin layerIcon {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
 }
 .layerIcon {
   @include layerIcon;
+}
+
+@mixin list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: map-get($spacing, 100);
+}
+
+.list {
+  @include list;
+}
+
+@mixin layerContent {
+  display: flex;
+  flex-direction: column;
+  gap: map-get($spacing, 75);
+}
+.layerContent {
+  @include layerContent;
 }
 @mixin contentReel_submit {
   display: inline-flex;
@@ -187,12 +234,37 @@
 }
 
 /* Wrapping */
-.options_container-Wrapper {
+@mixin options_container-Wrapper {
   display: inline-block;
   position: relative;
-  // display: flex;
-  // flex-direction: column;
-  // gap: map-get($spacing, 150);
+
+  p {
+    font-size: 12px;
+    line-height: 150%;
+    font-weight: 500;
+    font-family: "Inter";
+    color: theme-color($light-theme, text, secondary);
+  }
+
+  button {
+    display: flex;
+    padding: map-get($spacing, 50) map-get($spacing, 75);
+    justify-content: center;
+    align-items: center;
+    gap: map-get($spacing, 50);
+    border-radius: map-get($radius, 4);
+    border: 1px solid linear-gradient(#2daae0, #0085ff, #0066fe);
+
+    font-family: "Inter";
+    text-align: center;
+    font-size: 12px;
+    font-weight: 400;
+    color: map-get($pb_gradient, c);
+  }
+}
+
+.options_container-Wrapper {
+  @include options_container-Wrapper;
 }
 .option_wrapper {
   display: flex; /* Make sure the tooltip is visible without any trigger */
@@ -214,13 +286,13 @@
   white-space: nowrap;
   display: flex;
   flex-direction: column;
-  gap: map-get($spacing, 150);
+  gap: map-get($spacing, 75);
   // position: absolute;
 }
 
 /* CSS border triangles */
 .Tooltip-Tip::before {
-  content: ' ';
+  content: " ";
   left: map-get($spacing, 300);
   border: solid transparent;
   height: 0;
