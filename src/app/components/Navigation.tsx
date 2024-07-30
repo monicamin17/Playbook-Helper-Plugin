@@ -110,7 +110,7 @@ function Navigation({ activeTab, onTabChange }) {
           )}
         </div>
 
-        <div className="about_container">
+        <div className="about_container" onClick={() => {onTabChange("about");}}>
           {/* <InfoIcon></InfoIcon> */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
