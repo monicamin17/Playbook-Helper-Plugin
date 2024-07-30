@@ -22,9 +22,9 @@ interface ContentReelProps {
 }
 
 function ContentReel({ results }: ContentReelProps) {
-  console.log("Results.text: ", results.text);
-  console.log("Results.image: ", results.image);
-  console.log("Results.frames: ", results.frames);
+  // console.log("Results.text: ", results.text);
+  // console.log("Results.image: ", results.image);
+  // console.log("Results.frames: ", results.frames);
 
   const [selections, setSelections] = useState({});
   const textRef = useRef(null); // Separate ref for text items

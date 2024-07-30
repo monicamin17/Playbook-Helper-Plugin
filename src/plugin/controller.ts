@@ -50,9 +50,7 @@ figma.ui.onmessage = async (msg) => {
         const nodeId = change.id;
         const selection = change.selectedOption;
         await ContentReel.handleSelection(nodeId, selection);
-      }
-
-      // figma.closePlugin();
+      }      
       break;
     case "userSelection":
       // console.log('entered userSelection, ', msg.value);

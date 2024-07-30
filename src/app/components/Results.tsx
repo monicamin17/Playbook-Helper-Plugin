@@ -5,7 +5,7 @@ import "../styles/Linter.scss";
 // import AlertIcon from '../icons/AlertIcon';
 
 function Results({ results, choice }) {
-  console.log("Results!!!:", results);
+  // console.log("Results!!!:", results);
   const handleReload = () => {
     parent.postMessage(
       { pluginMessage: { type: "userSelection", value: choice } },

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useCallback, useEffect} from "react";
 import "../styles/ContentReel.scss";
 import ContentReelOptionsList from "./ContentReelOptionsList";
 
@@ -15,17 +15,27 @@ function ContentReelLayerItem({ item, type, onSelectionChange }) {
     "League",
     "Headline",
   ];
-  const imageOptions = [/* "Headshot",  */"Thumbnail"];
+  const imageOptions = ["Headshot","Thumbnail"];
 
-  const handleOptionSelect = (option) => {
-    setSelectedOption(option);
-    onSelectionChange(item[1], option);
-    setShowOptions(false);
-  };
+  const handleOptionSelect = useCallback((option) => {
+    // setIsLoading(true);
+    // Simulating an async operation
+    setTimeout(() => {
+      setSelectedOption(option);
+      onSelectionChange(item[1], option);
+      setShowOptions(false);
+      // setIsLoading(false);
+    }, 100);
+  }, [item, onSelectionChange]);
 
-  const toggleOptions = () => {
-    setShowOptions(!showOptions);
-  };
+  const toggleOptions = useCallback(() => {
+    setShowOptions(prev => !prev);
+  }, []);
+
+  useEffect(() => {
+    // Any side effects that need to happen when the component mounts
+    // or when certain props change
+  }, [item, type]);
 
   return (
     <div className={"item"}>
@@ -40,7 +50,7 @@ function ContentReelLayerItem({ item, type, onSelectionChange }) {
               viewBox="0 0 15 14"
               fill="none"
             >
-              <g clip-path="url(#clip0_2426_6758)">
+              <g clipPath="url(#clip0_2426_6758)">
                 <path
                   fillRule="evenodd"
                   clipRule="evenodd"
@@ -84,7 +94,7 @@ function ContentReelLayerItem({ item, type, onSelectionChange }) {
               viewBox="0 0 15 14"
               fill="none"
             >
-              <g clip-path="url(#clip0_2426_6760)">
+              <g clipPath="url(#clip0_2426_6760)">
                 <path
                   fillRule="evenodd"
                   clipRule="evenodd"
