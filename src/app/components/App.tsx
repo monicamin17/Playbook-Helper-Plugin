@@ -6,6 +6,7 @@ import LinterOptions from './LinterOptions';
 import Results from './Results';
 import ContentReel from './ContentReel'; // Import the ContentReel component
 import StickyNote from './StickyNote'; // Import the StickyNote component
+import Information from './Information';
 
 function App() {
   // const [authenticated, setAuthenticated] = useState(false);
@@ -15,7 +16,7 @@ function App() {
   const [activeLinterOption, setActiveLinterOption] = useState('All');
 
   useEffect(() => {
-    console.log('Results in App after update:', results);
+    // console.log('Results in App after update:', results);
   }, [results]);
 
   useEffect(() => {
@@ -130,7 +131,9 @@ function App() {
               </>
             ) : activeTab === 'stickyNote' ? (
               <StickyNote />
-            ) : null}
+            ) : activeTab==='about'? (
+              <Information/>
+            ):null}
           </div>
         </>
     //   )}
