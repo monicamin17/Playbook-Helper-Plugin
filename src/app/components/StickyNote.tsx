@@ -8,6 +8,7 @@ const colors = [
   { name: "Purple", hex: "#D9B8FF" },
   { name: "Yellow", hex: "#FFD966" },
 ];
+// In UI
 
 function StickyNote() {
   const handleStickyNoteClick = (color) => {
@@ -36,6 +37,7 @@ function StickyNote() {
                 backgroundColor: hex,
                 cursor: "pointer",
               }}
+              
             ></div>
             <p>{name}</p>
           </div>
