@@ -39,7 +39,7 @@ export default async function createSticky(color:string) {
   await figma.loadFontAsync({ family: "Inter", style: "Regular" });
   await figma.loadFontAsync({ family: "Inter", style: "Medium" });
   text.fontName = { family: "Inter", style: "Medium" };
-  text.characters = "Type anything, @mention anyone";
+  text.characters = "Type anything here";
   text.layoutAlign = "STRETCH";
 
   text.fills = [{ type: "SOLID", color: { r: 0, g: 0, b: 0} }];

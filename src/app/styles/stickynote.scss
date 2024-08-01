@@ -2,7 +2,7 @@
 
 @mixin stickyNoteResults {
   display: flex;
-  padding: map-get($spacing, 150);
+  padding: map-get($spacing, 100);
   flex-direction: column;
   align-items: flex-start;
   gap: map-get($spacing, 250);
