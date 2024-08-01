@@ -246,7 +246,7 @@
   cursor: pointer;
 }
 
-@mixin successContainer {
+@mixin messagingContainer {
   display: flex;
   height: 100%;
   padding: map-get($spacing, 0);
@@ -258,7 +258,6 @@
   align-self: stretch;
 
   p {
-    color: map-get($pb_gradient, c);
     text-align: center;
     font-family: Inter;
     font-size: 16px;
@@ -267,10 +266,10 @@
     line-height: 150%; /* 24px */
   }
 }
-.successContainer {
-  @include successContainer();
+.messagingContainer {
+  @include messagingContainer();
 }
-@mixin successGraphic {
+@mixin messagingSVGContainer {
   display: flex;
   width: 100px;
   height: 100px;
@@ -279,13 +278,53 @@
   align-items: center;
   gap: map-get($spacing, 0);
   border-radius: map-get($radius, circle);
-  background: theme-color($light-theme, surfaces, status);
 }
 
-.successGraphic {
+@mixin loadingContainer{
+  background-color: theme-color($light-theme, surfaces, status);
+}
+
+.loadingContainer{
+  @include loadingContainer();
+}
+@mixin successContainer{
+  background-color: theme-color($light-theme, surfaces, positive);
+}
+
+.successContainer{
+  @include successContainer();
+}
+.messagingSVGContainer {
+  @include messagingSVGContainer;
+}
+
+@mixin messagingSVG{
+  width: 80px;
+}
+
+.messagingSVG{
+  @include messagingSVG();
+}
+@mixin successGraphic{
+  width: 40px;
+}
+.successGraphic{
   @include successGraphic;
 }
 
+@mixin successText{
+  color: theme-color($light-theme, text, positive);
+}
+.successText{
+  @include successText;
+}
+
+@mixin loadingText{
+  color: map-get($pb_gradient, c);
+}
+.loadingText{
+  @include loadingText;
+}
 @mixin footer {
   display: flex;
   padding: map-get($spacing, 50) map-get($spacing, 100);

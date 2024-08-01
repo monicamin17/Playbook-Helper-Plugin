@@ -16,7 +16,7 @@ export async function checkColors(
 ) {
   if (!Array.isArray(colors) || colors.length === 0) return;
   for (const color of colors) {
-    if (color.type === 'IMAGE') return;
+    if (color.type === 'IMAGE' || color.type === 'VIDEO') return;
     if (checkColorsType(color, styleId)) {
       console.log('color: ', color);
       console.log('color.color: ', color.color);
