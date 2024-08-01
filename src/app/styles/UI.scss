@@ -185,6 +185,10 @@ p {
   font-size: 12px;
   font-weight: 500;
   color: theme-color($light-theme, text, secondary);
+
+  &:hover{
+    cursor: pointer;
+  }
 }
 
 .about_container {
@@ -215,4 +219,63 @@ p {
 }
 .refreshContainer{
   @include refreshContainer;
+}
+
+
+@mixin infoBody{
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  justify-content: space-between;
+  // height: 100vh;
+  gap: map-get($spacing, 100);
+  padding: map-get($spacing, 100);
+  font-family: 'Inter';
+
+  h2{
+    color: #181b29;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 100%;
+    letter-spacing: -0.4px;
+    margin: 0;
+  }
+
+  h3{
+    color: #181b29;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 100%;
+    letter-spacing: -0.4px;
+    margin: 0;
+  }
+
+  li{
+    line-height: 125%;
+    font-size: 14px;
+    margin-top: map-get($spacing, 75);
+  
+  }
+}
+
+.infoBody{
+  @include infoBody;
+}
+
+@mixin code{
+  display: inline-block;
+  font-family: 'Recursive';
+  background-color: theme-color($light-theme, surfaces, secondary);
+  padding: map-get($spacing, 25);
+  color: theme-color($light-theme, text, alert);
+  border-radius: map-get($radius, 4);
+  font-size: 12px;
+  border: 1px solid theme-color($light-theme, utility, border_primary);
+
+}
+
+.code{
+  @include code;
 }
