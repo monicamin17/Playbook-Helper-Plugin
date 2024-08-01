@@ -18,7 +18,7 @@
 
   p{
     font-family: 'Inter';
-    font-size: 12px;
+    font-size: 14px;
     color: theme-color($light-theme, text, secondary);
   }
 }
@@ -167,6 +167,14 @@
   display: flex;
   flex-wrap: wrap;
   gap: map-get($spacing, 100);
+}
+@mixin selectedOptionContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.selectedOptionContainer{
+  @include selectedOptionContainer;
 }
 
 .list {

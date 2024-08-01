@@ -165,7 +165,7 @@ export async function handleSelection(nodeId: string, option: string) {
 
   const node = await figma.getNodeByIdAsync(nodeId);
   const parentFrame = getParentFrame(node);
-  let parentId = parseFrameId(parentFrame.id);
+  console.log(parentFrame);
   
   const league = getRandomLeague();
   let news;
@@ -173,7 +173,7 @@ export async function handleSelection(nodeId: string, option: string) {
 
   
   if (parentFrame) {
-    const frameData = frameToNodes.get(parentId);
+    const frameData = frameToNodes.get(parentFrame.id);
     if (frameData) {
       if (!frameData.news && getNewsInfo) {
         frameData.news = await getArenaNews(league);
@@ -228,8 +228,8 @@ export async function handleSelection(nodeId: string, option: string) {
     case "Headshot":
       replaceImg(node.id, player.headshotUrl);
       break;
-
   }
+  
 }
 
 function getValidArticle(data: any): any {
@@ -340,7 +340,6 @@ async function replaceImg(nodeId: string, url: string) {
     try {
       // Create an image from the URL
       const image = await figma.createImageAsync(url);
-      // console.log(image);
 
       // Cast node to a type that supports fills
       const fillableNode = node as
@@ -419,7 +418,6 @@ async function getTeam(teamId: string) {
     }
 
     const data = await response.json();
-    // console.log(data);
 
     return data.data.location + " " + data.data.nickName;
   } catch (error) {

@@ -117,7 +117,7 @@ function ContentReelLayerItem({ item, type, onSelectionChange }) {
               <p>{item[0]}</p>
               <p>
                 {selectedOption ? (
-                  <>
+                  <div className="selectedOptionContainer">
                     <svg
                       width="20"
                       height="20"
@@ -144,7 +144,7 @@ function ContentReelLayerItem({ item, type, onSelectionChange }) {
                       </g>
                     </svg>{" "}
                     {selectedOption}
-                  </>
+                  </div>
                 ) : (
                   ""
                 )}

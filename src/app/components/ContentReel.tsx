@@ -22,10 +22,6 @@ interface ContentReelProps {
 }
 
 function ContentReel({ results }: ContentReelProps) {
-  // console.log("Results.text: ", results.text);
-  // console.log("Results.image: ", results.image);
-  // console.log("Results.frames: ", results.frames);
-
   const [selections, setSelections] = useState({});
   const textRef = useRef(null); // Separate ref for text items
   const imageRef = useRef(null); // Separate ref for image items
@@ -155,6 +151,23 @@ function ContentReel({ results }: ContentReelProps) {
   // Check if there are any selections
   const hasSelections = Object.keys(selections).length > 0;
   const handleReload = () => {
+    setSelections({});
+    
+    if (textRef.current) {
+      textRef.current
+        .querySelectorAll(".selectedReplacement")
+        .forEach((el) => el.remove());
+    }
+    if (imageRef.current) {
+      imageRef.current
+        .querySelectorAll(".selectedReplacement")
+        .forEach((el) => el.remove());
+    }
+    if (framesRef.current) {
+      framesRef.current
+        .querySelectorAll(".selectedReplacement")
+        .forEach((el) => el.remove());
+    }
     parent.postMessage(
       { pluginMessage: { type: "contentReel", value: 'Content Reel' } },
       "*"
