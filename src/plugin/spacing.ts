@@ -28,12 +28,12 @@ export async function checkSpacing(node: any) {
 
   // No item spacing
   if (boundVariables["itemSpacing"] === undefined && node.itemSpacing !== 0) {
-    addToMap(itemSpacingMap, node.itemSpacing,  node.name, node.id, "Horizontal Spacing");
+    addToMap(itemSpacingMap, node.itemSpacing,  node.name, node.id, "Horizontal Gap");
   }
 
   // No item spacing
   if (boundVariables["counterAxisSpacing"] === undefined && node.counterAxisSpacing !== 0) {
-    addToMap(counterAxisSpacing, node.counterAxisSpacing,  node.name, node.id, "Vertical Spacing");
+    addToMap(counterAxisSpacing, node.counterAxisSpacing,  node.name, node.id, "Vertical Gap");
   }
 
   // Side paddings
@@ -111,7 +111,7 @@ export async function checkRadius(node: any) {
   console.log(node);
   if(node.type === 'VECTOR'){
     if(node.cornerRadius !== 0){
-      addToMap(radiusMap, node.cornerRadius,  node.name, node.id, "Radius");
+      addToMap(radiusMap, node.cornerRadius,  node.name, node.id, "Corner Radius");
     }
 
     // Vectors don't have any other type of radius, so return
@@ -130,7 +130,7 @@ export async function checkRadius(node: any) {
     node.bottomLeftRadius === node.topRightRadius &&
     node.bottomLeftRadius !== 0
   ) {
-    addToMap(radiusMap, node.bottomLeftRadius,  node.name, node.id, "Radius");
+    addToMap(radiusMap, node.bottomLeftRadius,  node.name, node.id, "Corner Radius");
     return;
   }
 
