@@ -57,18 +57,7 @@ function App() {
   //   parent.postMessage({ pluginMessage: { type: 'saveToken', token } }, '*');
   // };
 
-  // const handleTabChange = (tab) => {
-  //   setResults({});
-  //   if(tab === 'styles'){
-  //     parent.postMessage(
-  //       { pluginMessage: { type: "getSavedStyles"} },
-  //       "*"
-  //     );
-  //   }
-  //   setActiveTab(tab);
 
-  //   // setResults({}); // Clear results when changing tabs
-  // };
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     setLoading(true);
