@@ -1,5 +1,5 @@
 // StickyNote.js
-import React from "react";
+import React, {useEffect} from "react";
 import "../styles/stickynote.scss";
 
 const colors = [
@@ -17,6 +17,37 @@ function StickyNote() {
       "*"
     );
   };
+  useEffect(() => {
+    const colorBoxes = document.getElementsByClassName('colorBox');
+  
+    for (const color of colorBoxes) {
+      color.addEventListener('dragstart', (e: DragEvent) => {
+        if (e.dataTransfer && e.target instanceof HTMLElement) {
+          e.dataTransfer.setData("text/plain", e.target.getAttribute('data-color') || '');
+        }
+      });
+  
+      color.addEventListener('dragend', (e: DragEvent) => {
+        if (e.dataTransfer && e.target instanceof HTMLElement) {
+          console.log('Sending dragend message:', {
+            type: 'pluginDrop',
+            clientX: e.clientX,
+            clientY: e.clientY,
+            dropMetadata: e.target.getAttribute('data-color') || ''
+          });
+          parent.postMessage({
+            pluginMessage: {
+              type: 'pluginDrop',
+              clientX: e.clientX,
+              clientY: e.clientY,
+              dropMetadata: e.target.getAttribute('data-color') || ''
+            }
+          }, '*');
+        }
+      });
+    }
+  }, []);
+
 
   return (
     <div className="stickyNoteResults">
@@ -33,6 +64,8 @@ function StickyNote() {
             <div
               onClick={() => handleStickyNoteClick(name)}
               className="colorBox"
+              data-color={name}
+              draggable="true"
               style={{
                 backgroundColor: hex,
                 cursor: "pointer",

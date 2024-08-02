@@ -106,11 +106,16 @@ async function parseNodes(node: any) {
 
   // Process text nodes
   if (Helper.isTextNode(node)) {
+    console.log(node);
+    console.log(frameData.parentFrameName.includes('$spacing-'));
     if (frameData) {
+      // Will not find nodes that are part of the $spacing parts components
+      if(!frameData.parentFrameName.includes('$spacing-')){
       frameData.textNodes.push([node.name, node.id]);
       // frameToNodes.set(parentId!, frameData);
       frameToNodes.set(parentId!, frameData);
       // console.log(`Set frameData for ${parentId}:`, frameData);
+      }
     } else {
       textNodes.push([node.name, node.id]);
     }

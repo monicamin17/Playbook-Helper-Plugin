@@ -19,14 +19,13 @@ figma.showUI(__html__);
 figma.ui.resize(UI_WIDTH, UI_HEIGHT);
 
 // Test -- reset data
-figma.clientStorage.deleteAsync("figmaToken");
-figma.clientStorage.deleteAsync("keyMap");
+// figma.clientStorage.deleteAsync("figmaToken");
+// figma.clientStorage.deleteAsync("Plugin Exploration");
 
 init();
 
 // Message handler
 figma.ui.onmessage = async (msg) => {
-  // console.log(msg);
   // console.log(msg.type);
   // console.log(msg.value);
 
@@ -39,8 +38,11 @@ figma.ui.onmessage = async (msg) => {
     //   const token = await Authenticate.getToken();
     //   figma.ui.postMessage({ type: "token", token });
     //   break;
-    case 'stickyNote':
+    case "stickyNote":
       await StickyNote.default(msg.value);
+      break;
+    case "pluginDrop":
+      await StickyNote.default(msg.dropMetadata, msg.clientX, msg.clientY);
       break;
     case "contentReel":
       await ContentReel.start();
@@ -50,23 +52,42 @@ figma.ui.onmessage = async (msg) => {
         const nodeId = change.id;
         const selection = change.selectedOption;
         await ContentReel.handleSelection(nodeId, selection);
-      }      
+      }
       break;
     case "userSelection":
-      // console.log('entered userSelection, ', msg.value);
       userSelection = msg.value;
       await handleUserSelection();
       break;
+    case "getSavedStyles":
+      await returnSavedLibrary();
+      break;
+    case "deleteStyles":
+      await Styles.deleteKeys(msg.value);
+      await returnSavedLibrary();
     case "selectSpecificNode":
       await handleSpecificNode(msg.nodeId);
-    case "saveStyles":
-      await Styles.getLocalPaintStyles();
-      break;
     case "selectAllNodes":
       await selectAllNodes(msg.value);
       break;
   }
 };
+
+async function returnSavedLibrary(){
+  let allStyles = await Styles.getSavedKeys();
+  let returnLibraries = [];
+  for (const library of allStyles) {
+    let libraryObject = await figma.clientStorage.getAsync(library);
+    let libraryName = library;
+    let lastSaved = libraryObject[1];
+    console.log(libraryName, ' ', lastSaved);
+
+    returnLibraries.push([libraryName, lastSaved]);
+  }
+  console.log("GETTING SAVED STYLES! ", returnLibraries);
+  figma.ui.postMessage({ type: "All Saved Styles", data: returnLibraries });
+}
+
+
 
 // Retrieve the token when the plugin initializes
 async function init() {
@@ -97,8 +118,19 @@ async function handleSpecificNode(nodeId: string) {
    and go through the selection */
 async function handleUserSelection() {
   await Linter.resetData();
+  importedLibraries = [];
+  console.log('importedLIbraries: ', importedLibraries);
   await logAvailableLibraries();
-  await checkIfBound(figma.currentPage.selection);
+
+  if(userSelection === 'Save Styles'){
+    await Styles.getLocalPaintStyles();
+    await returnSavedLibrary();
+    // figma.ui.postMessage({ type: 'results', data: 'Successfully stored local styles.' });
+    return;
+  }
+  else{ 
+    await checkIfBound(figma.currentPage.selection);
+  }
 }
 
 // Select all of the issue nodes if the user presses the 'Select All' button
@@ -172,14 +204,14 @@ async function traverseNode(node: SceneNode) {
   }
 }
 
-// Skip asset components and locked nodes
+// Skip asset components and locked/stickynote nodes
 async function shouldSkipNode(node: SceneNode): Promise<boolean> {
-  // Node is locked
-  if (Utilities.isLocked(node)) return true;
+  // Node is locked or is a StickyNote
+  if (Utilities.isLocked(node) || node.name.includes('📌 StickyNote')) return true;
 
-  if (
-    Helper.isOneOfNodeType(node, ["INSTANCE", "COMPONENT", "COMPONENT_SET"])
-  ) {
+
+  // If it's a component/instance, check if it has the keyword in the description to skip over it
+  if (Helper.isOneOfNodeType(node, ["INSTANCE", "COMPONENT", "COMPONENT_SET"])) {
     const keyFound = await checkComponent(node);
     if (keyFound) return true; // Skip if key was found
   }
@@ -203,9 +235,9 @@ async function checkNodeColors(node: SceneNode) {
   );
 }
 
-// Design Linter: Ignore components if they are from the Assets Library
-// Content Reel: Should not ignore any components
-/* async function checkComponent(node: any): Promise<boolean> {
+
+// Will check if the node has the word "@@PLAYBOOK_HELPER_PLUGIN: SKIP" in it's description -> keyword to skip
+async function checkComponent(node: any): Promise<boolean> {
   if (Helper.isInstanceNode(node)) {
     node = await (node as InstanceNode).getMainComponentAsync();
   }
@@ -215,34 +247,10 @@ async function checkNodeColors(node: SceneNode) {
   }
 
   if (node.type === "COMPONENT_SET" || node !== null) {
-    // Hash the key to get the short key
-    const shortKey = API.hashKey(node.key); // Ensure node.key is a string
-
-    // Check if the short key is in assetsKeys
-    if (API.keyMap.has(shortKey)) {
-      // console.log('key was found');
+    if ((node as ComponentSetNode).description?.includes("@PLAYBOOK_HELPER_PLUGIN: SKIP")) {
       return true;
-    } else {
-      // console.log('key was not found');
-      return false;
     }
   }
-} */
 
-  async function checkComponent(node: any): Promise<boolean> {
-    // Will check if the node has the word "@PLAYBOOK_HELPER_SKIPCOMPONENT" in it's description -> keyword to skip
-    if (Helper.isInstanceNode(node)) {
-      node = await (node as InstanceNode).getMainComponentAsync();
-    }
-
-    if (Helper.isComponentNode(node) && node.parent?.type === 'COMPONENT_SET') {
-      node = node.parent;
-    }
-  
-    if (node.type === 'COMPONENT_SET' || node !== null) {
-      if ((node as ComponentSetNode).description?.includes('TEAMLOGO')) {
-        return true;
-      }
-    }
-    return false;
-  }
+  return false;
+}

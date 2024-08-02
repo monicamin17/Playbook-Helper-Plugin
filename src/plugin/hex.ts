@@ -8,6 +8,7 @@ export async function manageHex(colors: any[], node: SceneNode) {
         console.log(hex);
         if (hex) {
             addToHexMap(hex, node.name, node.id);
+            console.log('added');
         }
     }
 }

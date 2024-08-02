@@ -5,8 +5,6 @@ import * as Spacing from "./spacing";
 import * as Helper from "@figma-plugin/helpers";
 
 
-// export let userSelection = 'All';
-export let importedLibraries: any[] = [];
 
 // Handle the colors appropriately (if it's a gradient or not)
 export async function checkColors(
@@ -17,9 +15,9 @@ export async function checkColors(
   if (!Array.isArray(colors) || colors.length === 0) return;
   for (const color of colors) {
     if (color.type === 'IMAGE' || color.type === 'VIDEO') return;
+
+
     if (checkColorsType(color, styleId)) {
-      console.log('color: ', color);
-      console.log('color.color: ', color.color);
       if(color.color){
         await Hex.manageHex([color.color], node);
       }
@@ -34,8 +32,9 @@ export async function checkColors(
 
 function checkColorsType(color: any, styleId: string) : boolean{
   const hasNoBoundVariables = !color?.boundVariables || Object.keys(color.boundVariables).length === 0;
-  console.log('hasNoBoundVariables: ', hasNoBoundVariables);
+
   return (
+    // check case where it was once a style but was detached
     hasNoBoundVariables &&
     styleId === ""
   );
@@ -47,7 +46,7 @@ async function handleUnimportedColor(
   styleId: string,
   node: SceneNode
 ) {
-  console.log('what');
+
   if (styleId !== "") {
     await Libraries.checkStyle(styleId, node);
   } else {
@@ -56,7 +55,6 @@ async function handleUnimportedColor(
 }
 
 export async function resetData() {
-  console.log('resetting')
   Libraries.missingVariables.clear();
   Libraries.missingStyles.clear();
   Hex.hexMap.clear();
@@ -76,7 +74,6 @@ export async function resetData() {
 
 // If user lints for spacing, start the functions
 export async function startSpacing(node: any) {
-  console.log(node.type);
   if(Helper.isTextNode(node) || node.type === 'VECTOR' || node.type === 'BOOLEAN_OPERATION' || node.type === 'GROUP' || node.type === 'LINE') return; 
   Spacing.checkRadius(node);
 
@@ -105,7 +102,7 @@ export async function sendResultsToUI() {
     paddingBottomMap?: any[];
     paddingTopBottomMap?: any[];
   } = {};
-console.log(results);
+
   if (Main.userSelection === "Library" || Main.userSelection === "All") {
     if (Libraries.missingVariables.size > 0) {
       results.missingVariables = Array.from(
@@ -186,16 +183,15 @@ console.log(results);
       );
     }
   }
-  console.log(results);
 
+  
   // Determine message type based on the results content
   let messageType = "results";
   if (Object.keys(results).length === 0) {
     messageType = "none";
   }
-  console.log('messageType: ', messageType);
 
-  // Spacing.fixIssues();
+  
   // Post message to the UI
   figma.ui.postMessage({ type: messageType, data: results });
 }

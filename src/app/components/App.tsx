@@ -7,6 +7,7 @@ import Results from "./Results";
 import ContentReel from "./ContentReel"; // Import the ContentReel component
 import StickyNote from "./StickyNote"; // Import the StickyNote component
 import Information from "./Information";
+import Styles from "./Styles";
 
 function App() {
   // const [authenticated, setAuthenticated] = useState(false);
@@ -16,7 +17,7 @@ function App() {
   const [activeLinterOption, setActiveLinterOption] = useState("All");
 
   useEffect(() => {
-    // console.log('Results in App after update:', results);
+    console.log('Results in App after update:', results);
   }, [results]);
 
   useEffect(() => {
@@ -41,7 +42,13 @@ function App() {
         case "none":
           setResults({});
           setLoading(false);
-          break;     
+          break;    
+        case "All Saved Styles":
+          console.log('Received all styles' ,data);
+          setLoading(false);
+          setResults(data);
+          
+          break;
       }
     };
   }, []);
@@ -50,11 +57,30 @@ function App() {
   //   parent.postMessage({ pluginMessage: { type: 'saveToken', token } }, '*');
   // };
 
+  // const handleTabChange = (tab) => {
+  //   setResults({});
+  //   if(tab === 'styles'){
+  //     parent.postMessage(
+  //       { pluginMessage: { type: "getSavedStyles"} },
+  //       "*"
+  //     );
+  //   }
+  //   setActiveTab(tab);
+
+  //   // setResults({}); // Clear results when changing tabs
+  // };
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    setResults({}); // Clear results when changing tabs
+    setLoading(true);
+    if (tab === 'styles') {
+      parent.postMessage(
+        { pluginMessage: { type: "getSavedStyles"} },
+        "*"
+      );
+    } else {
+      setResults({});
+    }
   };
-
   const handleLinterOptionClick = (option) => {
     console.log("handleLinterOptionClick: ", option);
     setActiveLinterOption(option);
@@ -131,6 +157,14 @@ function App() {
           </>
         ) : activeTab === "stickyNote" ? (
           <StickyNote />
+        ) : activeTab === "styles" ? (
+          loading ? (
+            <div className="loadingContainer">
+              <p>Loading styles...</p>
+            </div>
+          ) : (
+            <Styles results={results} />
+          )
         ) : activeTab === "about" ? (
           <Information />
         ) : null}

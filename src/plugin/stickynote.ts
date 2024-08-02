@@ -1,9 +1,22 @@
 // import * as Utilities from "@create-figma-plugin/utilities";
 import * as Helper from "@figma-plugin/helpers";
 
-export default async function createSticky(color:string) {
-    console.log(color);
+
+figma.ui.onmessage = async (msg) => {
+  console.log(msg);
+  if (msg.type === "createStickyNote") {
+    await createSticky(msg.color);
+  }
+};
+
+
+export default async function createSticky(color: string, x?: number, y?:number) {
   const frame = figma.createFrame();
+  if(x && y){
+    frame.x = x;
+    frame.y = y;
+    console.log(x, ' ', y);
+  }
   frame.layoutMode = "VERTICAL";
   frame.minWidth = 240;
   frame.minHeight = 245;
@@ -13,20 +26,19 @@ export default async function createSticky(color:string) {
   let yellow = "FFD966";
   let purple = "D9B8FF";
   let colorFill;
-  switch(color){
-    case 'Blue':
+  switch (color) {
+    case "Blue":
       colorFill = blue;
       break;
-    case 'Green':
+    case "Green":
       colorFill = green;
       break;
-    case 'Yellow':
+    case "Yellow":
       colorFill = yellow;
       break;
-    case 'Purple':
+    case "Purple":
       colorFill = purple;
       break;
-
   }
 
   let rgb = await Helper.hexToFigmaRGB(colorFill);
@@ -42,7 +54,7 @@ export default async function createSticky(color:string) {
   text.characters = "Type anything here";
   text.layoutAlign = "STRETCH";
 
-  text.fills = [{ type: "SOLID", color: { r: 0, g: 0, b: 0} }];
+  text.fills = [{ type: "SOLID", color: { r: 0, g: 0, b: 0 } }];
 
   text.fontSize = 16;
   text.lineHeight = { value: 150, unit: "PERCENT" };
@@ -50,19 +62,7 @@ export default async function createSticky(color:string) {
   frame.appendChild(text);
   frame.name = "📌 StickyNote";
 
+  
 
-  // const viewport = figma.viewport.bounds;
-  // const viewportWidth = viewport.width;
-  // const viewportHeight = viewport.height;
-  // const frameWidth = frame.width;
-  // const frameHeight = frame.height;
-
-  // // Calculate the position to center the frame
-  // const x = (viewportWidth - frameWidth) / 2;
-  // const y = (viewportHeight - frameHeight) / 2;
-
-  // frame.x = x;
-  // frame.y = y;
   figma.viewport.scrollAndZoomIntoView([frame]);
-  return frame;
 }

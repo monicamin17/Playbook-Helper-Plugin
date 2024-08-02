@@ -178,7 +178,7 @@ p {
 
 @mixin about_container {
   display: flex;
-  padding: map-get($spacing, 100);
+  padding: map-get($spacing, 0);
   align-items: center;
   gap: map-get($spacing, 50);
   align-self: stretch;
@@ -278,4 +278,16 @@ p {
 
 .code{
   @include code;
+}
+
+@mixin bottomNav{
+  display: flex;
+    flex-direction: column;
+    gap: map-get($spacing, 100);
+    align-self: stretch;
+    padding: map-get($spacing, 0) map-get($spacing, 100) map-get($spacing, 100)map-get($spacing, 100);
+
+}
+.bottomNav{
+  @include bottomNav();
 }

@@ -1,5 +1,5 @@
 // @collapse
-@import './Variables.scss';
+@import "./Variables.scss";
 
 @mixin pb_gradient($direction: to right) {
   background: linear-gradient($direction, #2daae0, #0085ff, #0066fe);
@@ -19,6 +19,40 @@
 .linterFilters {
   @include linterFilters;
 }
+@mixin stylesHeading {
+  padding: map-get($spacing, 100);
+  display: flex;
+  flex-direction: column;
+  gap: map-get($spacing, 50);
+  // align-items: center;
+  align-self: stretch;
+  border-bottom: 1px solid theme-color($light-theme, utility, border_primary);
+
+  p{
+    font-size: 12px;
+    color: theme-color($light-theme, text, secondary);
+  }
+
+  h2{
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: -2%;
+    line-height: 100%;
+    font-family: 'Inter';
+  }
+}
+
+@mixin stylesCategories{
+  justify-content: space-between;
+  display: flex;
+}
+.stylesHeading {
+  @include stylesHeading();
+}
+
+.stylesCategories{
+@include stylesCategories();
+}
 @mixin linter_button {
   display: inline-flex;
   justify-content: center;
@@ -31,7 +65,7 @@
   border-radius: map-get($radius, 4);
   transition: background-color 0.2s ease-in-out;
 
-  &:hover{
+  &:hover {
     background-color: theme-color($light-theme, surfaces, secondary);
   }
 }
@@ -90,7 +124,7 @@
 }
 @mixin primaryIssueText {
   color: theme-color($light-theme, text, primary);
-  font-family: 'Recursive', sans-serif;
+  font-family: "Recursive", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -101,7 +135,7 @@
 }
 @mixin secondaryIssueText {
   color: theme-color($light-theme, text, secondary);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -117,17 +151,15 @@
   align-items: flex-start;
   gap: 8px;
   width: 100%;
-
 }
 
 .affectedLayersContainer {
   @include affectedLayersContainer;
 }
 
-
 @mixin affectedLayersLabel {
   color: theme-color($light-theme, text, tertiary);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -179,7 +211,7 @@
 
 @mixin results {
   width: 100%;
-  flex: 1; 
+  flex: 1;
   overflow-y: auto;
   scrollbar-width: none;
 }
@@ -233,16 +265,16 @@
   background-color: theme-color($light-theme, surfaces, alert);
   p {
     color: theme-color($light-theme, text, alert);
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     font-style: normal;
     font-weight: 500;
-    line-height:1.25;
+    line-height: 1.25;
   }
 }
 .issueDropDown {
   @include issueDropDown;
 }
-.issueDropDown:hover{
+.issueDropDown:hover {
   cursor: pointer;
 }
 
@@ -280,49 +312,49 @@
   border-radius: map-get($radius, circle);
 }
 
-@mixin loadingContainer{
+@mixin loadingContainer {
   background-color: theme-color($light-theme, surfaces, status);
 }
 
-.loadingContainer{
+.loadingContainer {
   @include loadingContainer();
 }
-@mixin successContainer{
+@mixin successContainer {
   background-color: theme-color($light-theme, surfaces, positive);
 }
 
-.successContainer{
+.successContainer {
   @include successContainer();
 }
 .messagingSVGContainer {
   @include messagingSVGContainer;
 }
 
-@mixin messagingSVG{
+@mixin messagingSVG {
   width: 80px;
 }
 
-.messagingSVG{
+.messagingSVG {
   @include messagingSVG();
 }
-@mixin successGraphic{
+@mixin successGraphic {
   width: 40px;
 }
-.successGraphic{
+.successGraphic {
   @include successGraphic;
 }
 
-@mixin successText{
+@mixin successText {
   color: theme-color($light-theme, text, positive);
 }
-.successText{
+.successText {
   @include successText;
 }
 
-@mixin loadingText{
+@mixin loadingText {
   color: map-get($pb_gradient, c);
 }
-.loadingText{
+.loadingText {
   @include loadingText;
 }
 @mixin footer {
@@ -361,8 +393,8 @@
   @include footer_issues;
 }
 
-@mixin footer_no_errors{
-display: inline-flex;
+@mixin footer_no_errors {
+  display: inline-flex;
   border-radius: map-get($radius, 16);
 
   padding: map-get($spacing, 25) map-get($spacing, 50);
@@ -378,24 +410,64 @@ display: inline-flex;
     line-height: 125%; /* 15px */
   }
 }
-.footer_no_errors{
-@include footer_no_errors;
+.footer_no_errors {
+  @include footer_no_errors;
 }
 
-@mixin selectAllContainer{
-  &:hover{
+@mixin selectAllContainer {
+  &:hover {
     cursor: pointer;
   }
 }
 
-.selectAllContainer{
+.selectAllContainer {
   @include selectAllContainer;
 }
 
-@mixin rotatedIcon{
+@mixin rotatedIcon {
   transform: rotate(180deg);
 }
 
-.rotated{
+.rotated {
   @include rotatedIcon();
+}
+
+
+.styleListItem{
+  @include issueContainer();
+  justify-content: space-between;
+  align-items: center;
+}
+
+@mixin stylesBtn{
+  display: inline-flex;
+  width: 100%;
+  padding: map-get($spacing, 75) map-get($spacing, 125);
+  justify-content: center;
+  align-items: center;
+  gap: map-get($spacing, 25);
+
+  border: 0;
+  border-radius: map-get($radius, 4);
+  background: linear-gradient(#2daae0, #0085ff, #0066fe);
+  color: white;
+  &:hover {
+    cursor: pointer;
+  }
+}
+.stylesBtn{
+  @include stylesBtn();
+}
+
+@mixin inputElement{
+  display: flex;
+  gap: map-get($spacing, 25);
+}
+
+.inputElement{
+  @include inputElement();
+}
+
+.editContainer{
+  @include inputElement();
 }

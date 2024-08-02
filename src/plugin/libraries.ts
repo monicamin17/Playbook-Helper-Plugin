@@ -1,6 +1,6 @@
 import * as Helper from '@figma-plugin/helpers';
-import { importedLibraries } from './linterHelper';
-
+import { importedLibraries } from './controller';
+import * as Styles from './styles';
 export let missingVariables = new Map();
 export let missingStyles = new Map();
 
@@ -17,7 +17,7 @@ async function connectedLibrary(node: SceneNode, variableId: string, hex: string
     const collection = await figma.variables.getVariableCollectionByIdAsync(variable.variableCollectionId);
     const collectionName = collection?.name;
 
-    if (!isCollectionImported(collectionName)) {
+    if (!isCollectionImported(collectionName) && collection?.remote) {
         addMissingVariable(hex, node, variableId, collectionName, variable.name);
     }
 }
@@ -36,19 +36,29 @@ function addMissingVariable(hex: string, node: SceneNode, variableId: string, co
 
 
 export async function checkStyle(styleId: string, node: SceneNode) {
-    // for some reason, the stylekey does not match the stylekey when you fetch it...
     const importedStyle = await figma.getStyleByIdAsync(styleId);
     if (!importedStyle) return;
 
-    const keys = await getSavedKeys();
+    const keys = await Styles.getSavedKeys();
+
+    // Make sure keys is able to enumerated
     if (!Array.isArray(keys)) return;
 
     for (const library of keys) {
+        /* allColorNames[0] contains all the style information. allColorNames[1] contains the date it was saved. */
         const allColorNames = await figma.clientStorage.getAsync(library);
-        const matchingColor = allColorNames.find((color: any) => color.name === importedStyle.name);
+
+        /* Check if the style name matches */
+        const matchingColor = allColorNames[0].find((color: any) => color.name === importedStyle.name);
+        let style = await figma.getStyleByIdAsync(importedStyle.id);
         
-        if (matchingColor && !isLibraryImported(library)) {
-            addMissingStyle(importedStyle, node, styleId, library);
+
+        for(const key of importedLibraries){
+            if(library === key.libraryName) return;
+        }
+        
+        if (matchingColor && (!isLibraryImported(library) || style.remote)) {
+            addMissingStyle(importedStyle, node, library, styleId);
             break;
         }
     } 
@@ -63,15 +73,11 @@ function addMissingStyle(style: BaseStyle, node: SceneNode, styleId: string, lib
     if (style.type === 'PAINT' && Array.isArray(style.paints) && style.paints.length > 0) {
         const color = style.paints[0]?.color;
         const hex = Helper.figmaRGBToHex(color).toUpperCase();
-
         if (!missingStyles.has(hex)) {
             missingStyles.set(hex, []);
         }
         const styleInfo = [node.name, node.id, styleId, library, style.name];
+
         missingStyles.get(hex).push(styleInfo);
     }
-}
-
-export async function getSavedKeys() {
-    // Implementation of getSavedKeys
 }

@@ -1,4 +1,4 @@
-// Functions for getting styles from files.
+// Get the local styles of the current file
 export async function getLocalPaintStyles() {
   const fileName = figma.root.name;
   const paintStyles = await figma.getLocalPaintStylesAsync();
@@ -9,7 +9,7 @@ export async function getLocalPaintStyles() {
   }));
 
   // TEST!
-  // console.log(paintStylesData);
+  console.log(paintStylesData);
 
   saveToLocalStorage(paintStylesData, fileName);
   return paintStylesData;
@@ -56,8 +56,16 @@ async function getLocalEffectStyles() {
 */
 
 async function saveToLocalStorage(data:any, fileName:any) {
-  figma.clientStorage.setAsync(fileName, data);
-  // console.log('Successfully stored local styles.');
+  
+
+  let today = new Date();
+  let dd = String(today.getDate()).padStart(2, '0');
+  let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  let yyyy = today.getFullYear();
+  let todayDate = mm + '/' + dd + '/' + yyyy;
+
+  figma.clientStorage.setAsync(fileName, [data, todayDate]);
+  return;
 }
 
 export async function getSavedKeys(){
@@ -65,10 +73,8 @@ export async function getSavedKeys(){
   return keys;
 }
 
-
-//   module.exports = {
-//     getLocalPaintStyles,
-//     saveToLocalStorage,
-//     // getLocalTextStyles,
-//     // getLocalEffectStyles
-//   };
+export async function deleteKeys(keys: string[]){
+  for(const key of keys){
+    await figma.clientStorage.deleteAsync(key);
+  }
+}

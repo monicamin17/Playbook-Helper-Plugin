@@ -15,13 +15,10 @@ export let paddingTopMap = new Map();
 export let paddingBottomMap = new Map();
 export let paddingTopBottomMap = new Map();
 
-// let spatialSystemId = "NJRBXzVYuATYIywvZftwDP";
-
 export async function checkSpacing(node: any) {
   let boundVariables = node["boundVariables"];
   console.log('boundVariables: ', boundVariables);
-  // verticalspacing - itemSpacing
-  // horizontalspacing - counterAxisSpacing
+
 
   let verticalSpacing = false;
   let horizontalSpacing = false;
@@ -109,7 +106,7 @@ export async function checkSpacing(node: any) {
 export async function checkRadius(node: any) {
   // Note: Vectors have ONLY a cornerRadius and don't have a boundVariables.cornerRadius
   console.log(node);
-  if(node.type === 'VECTOR'){
+  if(node.type === 'VECTOR' || node.type === 'POLYGON'){
     if(node.cornerRadius !== 0){
       addToMap(radiusMap, node.cornerRadius,  node.name, node.id, "Corner Radius");
     }
@@ -191,6 +188,8 @@ async function addToMap(
   nodeId: string,
   errorMsg: string
 ) {
+  // Show up to the hundredths
+  value = Math.round(value * 100) / 100;
   if (!cornerMap.has(value)) {
     cornerMap.set(value, []);
   }
@@ -198,6 +197,8 @@ async function addToMap(
   cornerMap.get(value).push([nodeName, nodeId, errorMsg]);
 }
 
+
+// NOTE: One way to have suggested issues is by checking the node.inferredVariables property
 // export async function fixIssues() {
 //   try {
 //     // Fetch the data from API

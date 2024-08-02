@@ -29,7 +29,7 @@ function Results({ results, choice }) {
     "paddingBottomMap",
     "paddingTopBottomMap",
   ];
-
+console.log(results);
   // Calculate total number of issues
   const getTotalIssues = () => {
 
@@ -93,7 +93,24 @@ function Results({ results, choice }) {
             </div>
             <p className="successText">Everything looks great!</p>
           </div>
-        ) : (
+        ) : results === 'Successfully stored local styles.' ? (
+          <div className={"messagingContainer"}>
+            <div className="messagingSVGContainer successContainer">
+              <svg
+                className="successGraphic"
+                viewBox="0 0 24 19"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M8.00005 13.1501L19.9 1.25005C20.4 0.783382 20.95 0.550049 21.55 0.550049C22.15 0.550049 22.7 0.783382 23.2 1.25005C23.7 1.75005 23.95 2.30838 23.95 2.92505C23.95 3.54172 23.7 4.10005 23.2 4.60005L9.70005 18.1501C9.23338 18.6167 8.66672 18.85 8.00005 18.85C7.33338 18.85 6.76672 18.6167 6.30005 18.1501L0.750049 12.6C0.283382 12.1 0.0500488 11.5417 0.0500488 10.925C0.0500488 10.3084 0.300049 9.75005 0.800049 9.25005C1.30005 8.78338 1.85838 8.55005 2.47505 8.55005C3.09172 8.55005 3.65005 8.78338 4.15005 9.25005L8.00005 13.1501Z"
+                  fill="#639113"
+                />
+              </svg>
+            </div>
+            <p className="successText">Successfully stored local styles.</p>
+          </div>
+        ):(
           <>
             {results.hexColors?.map((item, index) => (
               <ListItem key={index} item={item} type="hex" />
@@ -132,6 +149,7 @@ function Results({ results, choice }) {
           </>
         )}
       </div>
+
       <div className="footer">
         <div
           className={totalIssues === 0 ? "footer_no_errors" : "footer_issues"}
