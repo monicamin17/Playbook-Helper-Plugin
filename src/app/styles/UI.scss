@@ -133,7 +133,7 @@ p {
 }
 @mixin menu_item {
   display: flex;
-  width: 100%;
+  align-self: stretch;
   padding: map-get($spacing, 25) map-get($spacing, 0) map-get($spacing, 25) map-get($spacing, 50);
   flex-direction: column;
   align-items: flex-start;
@@ -159,7 +159,7 @@ p {
 
 @mixin activeNav {
   display: flex;
-  width: 100%;
+  align-self: stretch;
   padding: map-get($spacing, 25) map-get($spacing, 0) map-get($spacing, 25) map-get($spacing, 50);
   flex-direction: column;
   align-items: flex-start;
