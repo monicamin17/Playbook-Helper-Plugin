@@ -1,6 +1,6 @@
 {
   "name": "Playbook Helper",
-  "id": "00000000",
+  "id": "1400989153139221657",
   "api": "1.0.0",
   "main": "dist/code.js",
   "capabilities": [],
@@ -13,7 +13,7 @@
   "permissions": ["teamlibrary"],
   "networkAccess": {
     "allowedDomains": ["*"],
-    "reasoning": "testing",
+    "reasoning": "Access API endpoint",
     "devAllowedDomains": []
   }
 }
