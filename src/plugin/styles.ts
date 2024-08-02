@@ -1,3 +1,8 @@
+const months = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
+
 // Get the local styles of the current file
 export async function getLocalPaintStyles() {
   const fileName = figma.root.name;
@@ -8,8 +13,6 @@ export async function getLocalPaintStyles() {
     paint: style.paints[0]
   }));
 
-  // TEST!
-  console.log(paintStylesData);
 
   saveToLocalStorage(paintStylesData, fileName);
   return paintStylesData;
@@ -59,10 +62,11 @@ async function saveToLocalStorage(data:any, fileName:any) {
   
 
   let today = new Date();
-  let dd = String(today.getDate()).padStart(2, '0');
-  let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  console.log(today.getDate());
+  let dd = today.getDate();
+  let mm = months[today.getMonth()];
   let yyyy = today.getFullYear();
-  let todayDate = mm + '/' + dd + '/' + yyyy;
+  let todayDate = mm + ' ' + dd + ', ' + yyyy;
 
   figma.clientStorage.setAsync(fileName, [data, todayDate]);
   return;
