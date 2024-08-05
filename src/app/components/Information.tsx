@@ -11,7 +11,6 @@ export default function Information() {
         <div>
         <h3>Linter</h3>
         <ul>
-
             <li>To have variables/styles counted as “Imported,” ensure you have a library imported. Press Assets and import your desired library.</li>
             <li>[Admin Purposes] Figma doesn’t check styles through a library directly. Save your style library to Figma storage to accurately lint for unimported styles. Use the <span className='code'>Save Styles</span>  button in the Styles tab at the bottom left.</li>
 
