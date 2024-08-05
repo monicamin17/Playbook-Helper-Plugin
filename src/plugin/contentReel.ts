@@ -81,6 +81,7 @@ export async function start() {
 // Check if each node is TEXT or IMAGE
 async function parseNodes(node: any) {
   if (!Helper.isVisibleNode(node)) return;
+  if(node.locked) return;
 
   const parentFrame = getParentFrame(node);
   let parentId: string | undefined;
