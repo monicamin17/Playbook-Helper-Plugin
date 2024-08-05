@@ -13,7 +13,7 @@ export default function Information() {
         <ul>
 
             <li>To have variables/styles counted as “Imported,” ensure you have a library imported. Press Assets and import your desired library.</li>
-            <li>Figma doesn’t check styles through a library directly. Save your style library to Figma storage to accurately lint for unimported styles. Use the <span className='code'>Save Styles</span>  button in the Styles tab at the bottom left.</li>
+            <li>[Admin Purposes] Figma doesn’t check styles through a library directly. Save your style library to Figma storage to accurately lint for unimported styles. Use the <span className='code'>Save Styles</span>  button in the Styles tab at the bottom left.</li>
 
             <li>Locked layers will be skipped and not linted.</li>
             <li>Components with the keyword <span className='code'>@PLAYBOOK_HELPER_PLUGIN: SKIP</span> in their description are automatically skipped. This keyword is added to the following files:
@@ -24,6 +24,7 @@ export default function Information() {
             </ul>
             </li>
             <li>Elements with a spacing or corner radius value of 0 will not be linted or flagged.</li>
+            <li>StickyNote frames are skipped.</li>
         </ul>
         </div>
 

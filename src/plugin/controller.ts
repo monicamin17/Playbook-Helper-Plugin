@@ -115,7 +115,7 @@ async function handleSpecificNode(nodeId: string) {
    and go through the selection */
 async function handleUserSelection() {
   await Linter.resetData();
-  importedLibraries = [];
+  // importedLibraries = [];
   console.log('importedLIbraries: ', importedLibraries);
   await logAvailableLibraries();
 
@@ -150,8 +150,8 @@ async function selectAllNodes(values: string[]) {
 // Checks which libraries are imported into the file
 export async function logAvailableLibraries() {
   try {
-    importedLibraries =
-      await figma.teamLibrary.getAvailableLibraryVariableCollectionsAsync();
+    importedLibraries = await figma.teamLibrary.getAvailableLibraryVariableCollectionsAsync();
+      console.log('after process: ', importedLibraries);
   } catch (error) {
     console.error("Error fetching available libraries: ", error);
   }

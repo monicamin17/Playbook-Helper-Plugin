@@ -88,7 +88,6 @@ function Styles({ results }) {
             Save Styles
           </button>
         )}
-        ;
       </div>
     </>
   );
