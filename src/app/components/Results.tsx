@@ -29,7 +29,7 @@ function Results({ results, choice }) {
     "paddingBottomMap",
     "paddingTopBottomMap",
   ];
-  console.log(results);
+  // console.log(results);
   // Calculate total number of issues
   const getTotalIssues = () => {
     const hexColorIssues = [

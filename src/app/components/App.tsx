@@ -17,7 +17,7 @@ function App() {
   const [activeLinterOption, setActiveLinterOption] = useState("All");
   const [loadingOpacity, setLoadingOpacity] = useState(1);
   useEffect(() => {
-    console.log('Results in App after update:', results);
+    // console.log('Results in App after update:', results);
   }, [results]);
 
   useEffect(() => {
@@ -46,10 +46,10 @@ function App() {
           // Handle invalid token
           break;
         case "errorToken":
-          console.log("Error getting token");
+          // console.log("Error getting token");
           break;
         case "results":
-          console.log("data!!:", data);
+          // console.log("data!!:", data);
           setResults(data);
           setLoading(false);
           break;
@@ -58,7 +58,7 @@ function App() {
           setLoading(false);
           break;    
         case "All Saved Styles":
-          console.log('Received all styles' ,data);
+          // console.log('Received all styles' ,data);
           setLoading(false);
           setResults(data);
           
@@ -85,7 +85,7 @@ function App() {
     }
   };
   const handleLinterOptionClick = (option) => {
-    console.log("handleLinterOptionClick: ", option);
+    // console.log("handleLinterOptionClick: ", option);
     setActiveLinterOption(option);
     setLoading(true);
     parent.postMessage(

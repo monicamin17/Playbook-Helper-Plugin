@@ -15,7 +15,7 @@ export default function Information() {
             <li>[Admin Purposes] Figma doesn’t check styles through a library directly. Save your style library to Figma storage to accurately lint for unimported styles. Use the <span className='code'>Save Styles</span>  button in the Styles tab at the bottom left.</li>
 
             <li>Locked layers will be skipped and not linted.</li>
-            <li>Components with the keyword <span className='code'>@PLAYBOOK_HELPER_PLUGIN: SKIP</span> in their description are automatically skipped. This keyword is added to the following files:
+            <li>Components with the keyword <span className='code'>@PLUGIN_SKIP</span> in their description are automatically skipped. This keyword is added to the following files:
             <ul>
               <li>Company Logos</li>
               <li>Team Logos</li>

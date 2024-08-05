@@ -21,7 +21,6 @@ figma.ui.resize(UI_WIDTH, UI_HEIGHT);
 
 init();
 
-// Message handler
 figma.ui.onmessage = async (msg) => {
   // console.log(msg.type);
   // console.log(msg.value);
@@ -152,6 +151,10 @@ export async function logAvailableLibraries() {
   try {
     importedLibraries = await figma.teamLibrary.getAvailableLibraryVariableCollectionsAsync();
       console.log('after process: ', importedLibraries);
+      // for(const lib of importedLibraries){
+      //   let variabless = await figma.teamLibrary.getVariablesInLibraryCollectionAsync(lib.key);
+      //   console.log(variabless);
+      // }
   } catch (error) {
     console.error("Error fetching available libraries: ", error);
   }
@@ -233,7 +236,7 @@ async function checkNodeColors(node: SceneNode) {
 }
 
 
-// Will check if the node has the word "@@PLAYBOOK_HELPER_PLUGIN: SKIP" in it's description -> keyword to skip
+// Will check if the node has the word "@PLUGIN_SKIP" in it's description -> keyword to skip
 async function checkComponent(node: any): Promise<boolean> {
   if (Helper.isInstanceNode(node)) {
     node = await (node as InstanceNode).getMainComponentAsync();
@@ -244,7 +247,7 @@ async function checkComponent(node: any): Promise<boolean> {
   }
 
   if (node.type === "COMPONENT_SET" || node !== null) {
-    if ((node as ComponentSetNode).description?.includes("@PLAYBOOK_HELPER_PLUGIN: SKIP")) {
+    if ((node as ComponentSetNode).description?.includes("@PLUGIN_SKIP")) {
       return true;
     }
   }

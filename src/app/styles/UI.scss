@@ -86,6 +86,9 @@ p {
   display: flex;
   padding: 8px;
   align-items: center;
+  justify-content: center;
+  height: 38px;
+  width: 38px;
   border-radius: map-get($radius, 2);
   border: none;
   background-color: theme-color($light-theme, surfaces, primary);
@@ -103,6 +106,9 @@ p {
   display: flex;
   padding: map-get($spacing, 50);
   align-items: center;
+  justify-content: center;
+  height: 38px;
+  width: 38px;
   border-radius: map-get($radius, 2);
   border: 1px solid theme-color($light-theme, utility, border_primary);
   background-color: theme-color($light-theme, surfaces, secondary);

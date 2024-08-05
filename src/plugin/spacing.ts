@@ -16,6 +16,7 @@ export let paddingBottomMap = new Map();
 export let paddingTopBottomMap = new Map();
 
 export async function checkSpacing(node: any) {
+  console.log(node);
   let boundVariables = node["boundVariables"];
   console.log('boundVariables: ', boundVariables);
 
@@ -25,7 +26,13 @@ export async function checkSpacing(node: any) {
 
   // No item spacing
   if (boundVariables["itemSpacing"] === undefined && node.itemSpacing !== 0) {
-    addToMap(itemSpacingMap, node.itemSpacing,  node.name, node.id, "Horizontal Gap");
+    if(node.layoutMode === 'VERTICAL'){
+      addToMap(counterAxisSpacing, node.itemSpacing,  node.name, node.id, "Vertical Gap");
+    }
+    else{
+      addToMap(itemSpacingMap, node.itemSpacing,  node.name, node.id, "Horizontal Gap");
+    }
+    
   }
 
   // No item spacing

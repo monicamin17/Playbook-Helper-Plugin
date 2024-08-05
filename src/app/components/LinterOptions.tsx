@@ -5,7 +5,6 @@ function LinterOptions({ onClick, activeOption }) {
   const options = ["All", "Library", "Hex", "Spacing"];
 
   const getIcon = (option, isActive) => {
-
     switch (option) {
       case "All":
         if (!isActive) {
@@ -40,15 +39,28 @@ function LinterOptions({ onClick, activeOption }) {
           return (
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
               fill="none"
             >
-              <path
-                d="M2.68749 13.1347L3.83978 8.30613L0.0177002 5.05779L5.03041 4.62196L6.99999 0.065918L8.96957 4.64279L13.9823 5.05779L10.1602 8.30613L11.3125 13.1347L6.99999 10.5738L2.68749 13.1347Z"
-                fill="#FAFAFB"
-              />
+              <mask
+                id="mask0_2426_6791"
+                style={{ maskType: "alpha" }}
+                maskUnits="userSpaceOnUse"
+                x="0"
+                y="0"
+                width="20"
+                height="20"
+              >
+                <rect width="20" height="20" fill="#D9D9D9" />
+              </mask>
+              <g mask="url(#mask0_2426_6791)">
+                <path
+                  d="M5.68761 16.1347L6.83991 11.3061L3.01782 8.05779L8.03053 7.62196L10.0001 3.06592L11.9697 7.64279L16.9824 8.05779L13.1603 11.3061L14.3126 16.1347L10.0001 13.5738L5.68761 16.1347Z"
+                  fill="#FAFAFB"
+                />
+              </g>
             </svg>
           );
         }

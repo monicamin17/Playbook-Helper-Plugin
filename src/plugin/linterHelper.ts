@@ -64,6 +64,7 @@ export async function resetData() {
   Spacing.topRightRadiusMap.clear();
   Spacing.radiusMap.clear();
   Spacing.itemSpacingMap.clear();
+  Spacing.counterAxisSpacing.clear();
   Spacing.paddingLeftMap.clear();
   Spacing.paddingRightMap.clear();
   Spacing.paddingSidesMap.clear();
