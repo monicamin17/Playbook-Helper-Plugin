@@ -15,10 +15,24 @@ function App() {
   const [results, setResults] = useState({});
   const [loading, setLoading] = useState(false);
   const [activeLinterOption, setActiveLinterOption] = useState("All");
-
+  const [loadingOpacity, setLoadingOpacity] = useState(1);
   useEffect(() => {
     console.log('Results in App after update:', results);
   }, [results]);
+
+  useEffect(() => {
+    let interval;
+    if (loading) {
+      setLoadingOpacity(1);
+      interval = setInterval(() => {
+        setLoadingOpacity(prevOpacity => prevOpacity === 1 ? 0.7 : 1);
+      }, 1000);
+    } else {
+      setLoadingOpacity(1);
+    }
+    return () => clearInterval(interval);
+  }, [loading]);
+
 
   useEffect(() => {
     window.onmessage = (event) => {
@@ -99,12 +113,15 @@ function App() {
               activeOption={activeLinterOption}
             />
             {loading ? (
-              <div className={"messagingContainer"}>
+              <div className={"messagingContainer"}
+            
+>
                 <div className="messagingSVGContainer loadingContainer">
                   <svg
                     className="messagingSVG"
                     viewBox="0 0 52 53"
                     fill="none"
+                    style={{ opacity: loadingOpacity, transition: 'opacity 0.2s ease-in-out' }}
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path fillRule="evenodd" clipRule="evenodd" d="M13.3027 1.12492C13.0787 0.453127 12.4501 0 11.7419 0C11.0338 0 10.4051 0.453127 10.1812 1.12492L8.04213 7.54213L1.62492 9.6812C0.953127 9.90513 0.5 10.5338 0.5 11.2419C0.5 11.9501 0.953127 12.5787 1.62492 12.8027L8.04213 14.9417L10.1812 21.359C10.4051 22.0307 11.0338 22.4839 11.7419 22.4839C12.4501 22.4839 13.0787 22.0307 13.3027 21.359L15.4417 14.9417L21.859 12.8027C22.5307 12.5787 22.9839 11.9501 22.9839 11.2419C22.9839 10.5338 22.5307 9.90513 21.859 9.6812L15.4417 7.54213L13.3027 1.12492ZM34.9077 14.4878C34.5345 13.3681 33.4867 12.6129 32.3065 12.6129C31.1262 12.6129 30.0784 13.3681 29.7052 14.4878L26.0259 25.5259L14.9878 29.2052C13.8681 29.5784 13.1129 30.6262 13.1129 31.8064C13.1129 32.9867 13.8681 34.0345 14.9878 34.4077L26.0259 38.087L29.7052 49.1251C30.0784 50.2448 31.1262 51 32.3065 51C33.4867 51 34.5345 50.2448 34.9077 49.1251L38.587 38.087L49.6251 34.4077C50.7448 34.0345 51.5 32.9867 51.5 31.8064C51.5 30.6262 50.7448 29.5784 49.6251 29.2052L38.587 25.5259L34.9077 14.4878ZM11.0412 38.7505C10.8918 38.3023 10.4724 38 10 38C9.52758 38 9.10816 38.3023 8.95876 38.7505L7.53169 43.0317L3.25048 44.4588C2.8023 44.6082 2.5 45.0276 2.5 45.5C2.5 45.9724 2.8023 46.3918 3.25048 46.5412L7.53169 47.9683L8.95876 52.2495C9.10816 52.6977 9.52758 53 10 53C10.4724 53 10.8918 52.6977 11.0412 52.2495L12.4683 47.9683L16.7495 46.5412C17.1977 46.3918 17.5 45.9724 17.5 45.5C17.5 45.0276 17.1977 44.6082 16.7495 44.4588L12.4683 43.0317L11.0412 38.7505Z" fill="#0085FF"/>
@@ -120,9 +137,10 @@ function App() {
         ) : activeTab === "contentReel" ? (
           <>
             {loading ? (
-              <div className={"successContainer"}>
+              <div className={"messagingContainer"}>
+                <div className="messagingSVGContainer loadingContainer">
                 <svg
-                  className="successGraphic"
+                  className="messagingSVG"
                   viewBox="0 0 62 56"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -138,7 +156,8 @@ function App() {
                     fill="#0085FF"
                   />
                 </svg>
-                <p>Scanning text and images...</p>
+                </div>
+                <p className="loadingText">Scanning text and images...</p>
               </div>
             ) : (
               <ContentReel results={results} />

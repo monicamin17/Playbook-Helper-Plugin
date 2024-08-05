@@ -2,10 +2,11 @@ import React, { useState , useCallback, useEffect} from "react";
 import "../styles/ContentReel.scss";
 import ContentReelOptionsList from "./ContentReelOptionsList";
 
-function ContentReelLayerItem({ item, type, onSelectionChange }) {
+function ContentReelLayerItem({ item, type, onSelectionChange, resetTrigger }) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [showOptions, setShowOptions] = useState(true);
-
+  console.log('selectedOption: ', selectedOption);
+  console.log('onSelectionChange: ', onSelectionChange);
   const textOptions = [
     "Duration",
     "Timestamp",
@@ -33,9 +34,11 @@ function ContentReelLayerItem({ item, type, onSelectionChange }) {
   }, []);
 
   useEffect(() => {
-    // Any side effects that need to happen when the component mounts
-    // or when certain props change
-  }, [item, type]);
+    // Reset selectedOption when resetTrigger changes
+    setSelectedOption(null);
+    setShowOptions(true);
+  }, [resetTrigger]);
+
 
   return (
     <div className={"item"}>

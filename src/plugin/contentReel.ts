@@ -10,11 +10,12 @@ const frameToNodes: Map<
     player: Player;
   }
 > = new Map();
-// <frameId, {[nodes.name, node.id], article?}
+// <frameId, {[nodes.name, node.id], [nodes.name, node.id], News, Player}
 
 export let textNodes: [string, string][] = [];
 export let imageNodes: [string, string][] = [];
 
+/* Token to access data endpoints for the Primpy API */
 const accessToken = "50faf2503afd19c54d1173aa12b818aaa6732cbf";
 
 class Player {
@@ -106,15 +107,11 @@ async function parseNodes(node: any) {
 
   // Process text nodes
   if (Helper.isTextNode(node)) {
-    console.log(node);
-    console.log(frameData.parentFrameName.includes('$spacing-'));
     if (frameData) {
       // Will not find nodes that are part of the $spacing parts components
       if(!frameData.parentFrameName.includes('$spacing-')){
       frameData.textNodes.push([node.name, node.id]);
-      // frameToNodes.set(parentId!, frameData);
       frameToNodes.set(parentId!, frameData);
-      // console.log(`Set frameData for ${parentId}:`, frameData);
       }
     } else {
       textNodes.push([node.name, node.id]);
@@ -142,6 +139,7 @@ async function parseNodes(node: any) {
   const firstPart = parts[0];
   return firstPart;
 }
+
 // Helper function to get the parent frame of a node
 function getParentFrame(node: BaseNode): InstanceNode | ComponentNode | BaseNode | null {
   let parent = node.parent;
@@ -162,6 +160,7 @@ function getParentFrame(node: BaseNode): InstanceNode | ComponentNode | BaseNode
   }
   return null;
 }
+
 export async function handleSelection(nodeId: string, option: string) {
   // Only call these functions when required
   let getPlayerInfo = option === 'Player' || option === 'Team' || option === 'Headshot';
@@ -261,6 +260,7 @@ function getValidArticle(data: any): any {
 
   return articleObject;
 }
+
 async function getArenaNews(arenaName: string) {
   const url = `https://sdf-api.cbssports.cloud/primpy/highlander/arena/news/${arenaName}?access_token=${accessToken}`;
 

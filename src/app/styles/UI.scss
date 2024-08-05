@@ -198,6 +198,10 @@ p {
   fill: theme-color($light-theme, utility, icon_primary);
 }
 
+.centerIcons{
+  margin: auto;
+}
+
 @mixin rightBody {
   width: 370px;
   display: flex;
@@ -231,6 +235,7 @@ p {
   gap: map-get($spacing, 100);
   padding: map-get($spacing, 100);
   font-family: 'Inter';
+  overflow-y: scroll;
 
   h2{
     color: #181b29;
@@ -252,10 +257,14 @@ p {
     margin: 0;
   }
 
+  ul{
+    padding-left: map-get($spacing, 200);
+  }
   li{
     line-height: 125%;
     font-size: 14px;
     margin-top: map-get($spacing, 75);
+
   
   }
 }

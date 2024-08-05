@@ -18,9 +18,6 @@ export let importedLibraries: LibraryVariableCollection[] = [];
 figma.showUI(__html__);
 figma.ui.resize(UI_WIDTH, UI_HEIGHT);
 
-// Test -- reset data
-// figma.clientStorage.deleteAsync("figmaToken");
-// figma.clientStorage.deleteAsync("Plugin Exploration");
 
 init();
 

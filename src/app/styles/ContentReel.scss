@@ -64,6 +64,9 @@
   padding: map-get($spacing, 100);
   flex: 1;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: map-get($spacing, 200);
 }
 .contentReelResults {
   @include contentReelResults;
@@ -220,7 +223,7 @@
 
 @mixin contentReel_submitContainer {
   display: flex;
-  padding: map-get($spacing, 100) map-get($spacing, 150);
+  padding: map-get($spacing, 100);
   align-items: center;
   gap: map-get($spacing, 100);
   align-self: stretch;

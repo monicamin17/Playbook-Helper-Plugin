@@ -74,7 +74,7 @@ export async function resetData() {
 
 // If user lints for spacing, start the functions
 export async function startSpacing(node: any) {
-  if(Helper.isTextNode(node) || node.type === 'VECTOR' || node.type === 'BOOLEAN_OPERATION' || node.type === 'GROUP' || node.type === 'LINE') return; 
+  if(Helper.isTextNode(node) || node.type === 'VECTOR' || node.type === 'BOOLEAN_OPERATION' || node.type === 'GROUP' || node.type === 'LINE' || node.type === 'SECTION') return; 
   Spacing.checkRadius(node);
 
   // Only frames in autolayout can have padding/spacing

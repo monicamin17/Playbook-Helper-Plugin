@@ -1,8 +1,10 @@
-let token: string;
-export let keyMap: Map<string, string> = new Map(); // Map for short keys to full keys
-export let teamId = '822233118828499781';
-// import { encode } from 'base-64';
 // import * as Authenticate from './authentication';
+
+let token: string;    // Personal access token
+export let keyMap: Map<string, string> = new Map(); // Map for short keys to full keys
+/* The team id will be present in the URL after the word team and before your team name. */
+export let teamId = '';
+
 
 // Make sure this token is valid
 export async function checkToken(token: string) {
@@ -38,7 +40,7 @@ export async function fetchData(term: string, id: string, endpoint: string, stat
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        'X-FIGMA-TOKEN': 'figd_lR37WDLbrCceato39qjX748fzxlEX3NaL1MB9pBF', // Custom header if needed
+        'X-FIGMA-TOKEN': token, // Custom header if needed
       },
     });
 
@@ -67,7 +69,7 @@ export async function postData(term: string, id: string, endpoint: string, state
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        'X-FIGMA-TOKEN': 'figd_lR37WDLbrCceato39qjX748fzxlEX3NaL1MB9pBF', // Custom header if needed
+        'X-FIGMA-TOKEN': token, // Custom header if needed
       },
     });
 

@@ -7,22 +7,31 @@ export default function Information() {
 
   return (
     <div className={"infoBody"}>
-        <h2>Information</h2>
+        <h2>About</h2>
         <div>
-        <h3>Capabilities of the Linter</h3>
+        <h3>Linter</h3>
         <ul>
-            <li>Components with the keyword <span className='code'>@PLAYBOOK_HELPER_PLUGIN: SKIP</span> in their description will automatically be skipped over. This keyword has automatically been added to all country assets, team logos, and company logos that will have loose hex values. </li>
-            <li>You must have a library imported in order for your variable/style to count as “Imported”. Press Assets and import your desired library.</li>
-            <li>Any layers that are locked will automatically be skipped and not linted.</li>
-            <li>Elements with a spacing or corner radius value of 0 will not be linted/flagged.</li>
+
+            <li>To have variables/styles counted as “Imported,” ensure you have a library imported. Press Assets and import your desired library.</li>
+            <li>Figma doesn’t check styles through a library directly. Save your style library to Figma storage to accurately lint for unimported styles. Use the <span className='code'>Save Styles</span>  button in the Styles tab at the bottom left.</li>
+
+            <li>Locked layers will be skipped and not linted.</li>
+            <li>Components with the keyword <span className='code'>@PLAYBOOK_HELPER_PLUGIN: SKIP</span> in their description are automatically skipped. This keyword is added to the following files:
+            <ul>
+              <li>Company Logos</li>
+              <li>Team Logos</li>
+              <li>Country Flags</li>
+            </ul>
+            </li>
+            <li>Elements with a spacing or corner radius value of 0 will not be linted or flagged.</li>
         </ul>
         </div>
 
         <div>
-            <h3>Capabilites of the Content Reel</h3>
+            <h3>Content Reel</h3>
             <ul>
                 <li>The content reel only scans for text layers and layers with an image fill.</li>
-                <li>The content reel groups text/image layers that are within a frame together so all information can be related to one another.</li>
+                <li>Text and image layers that are within a frame are grouped so all information can be related to one another.</li>
             </ul>
         </div>
         

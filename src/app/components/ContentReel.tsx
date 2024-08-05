@@ -22,11 +22,14 @@ interface ContentReelProps {
 }
 
 function ContentReel({ results }: ContentReelProps) {
+  
   const [selections, setSelections] = useState({});
   const textRef = useRef(null); // Separate ref for text items
   const imageRef = useRef(null); // Separate ref for image items
   const framesRef = useRef(null); // Separate ref for image items
+  const [resetTrigger, setResetTrigger] = useState(0);
 
+  console.log('selections: ', selections);
   const handleSelectionChange = (itemId, selectedOption) => {
     setSelections((prevSelections) => ({
       ...prevSelections,
@@ -42,7 +45,6 @@ function ContentReel({ results }: ContentReelProps) {
       return;
     }
 
-  
     const dataToSend = [
       ...(results.text
         ? Object.entries(selections)
@@ -151,74 +153,86 @@ function ContentReel({ results }: ContentReelProps) {
   // Check if there are any selections
   const hasSelections = Object.keys(selections).length > 0;
   const handleReload = () => {
-    setSelections({});
-    
-    if (textRef.current) {
-      textRef.current
-        .querySelectorAll(".selectedReplacement")
-        .forEach((el) => el.remove());
-    }
-    if (imageRef.current) {
-      imageRef.current
-        .querySelectorAll(".selectedReplacement")
-        .forEach((el) => el.remove());
-    }
-    if (framesRef.current) {
-      framesRef.current
-        .querySelectorAll(".selectedReplacement")
-        .forEach((el) => el.remove());
-    }
+    // setSelections({});
+
+    // if (textRef.current) {
+    //   textRef.current
+    //     .querySelectorAll(".selectedReplacement")
+    //     .forEach((el) => el.remove());
+    // }
+    // if (imageRef.current) {
+    //   imageRef.current
+    //     .querySelectorAll(".selectedReplacement")
+    //     .forEach((el) => el.remove());
+    // }
+    // if (framesRef.current) {
+    //   framesRef.current
+    //     .querySelectorAll(".selectedReplacement")
+    //     .forEach((el) => el.remove());
+    // }
     parent.postMessage(
-      { pluginMessage: { type: "contentReel", value: 'Content Reel' } },
+      { pluginMessage: { type: "contentReel", value: "Content Reel" } },
       "*"
     );
+    setSelections({});
+    setResetTrigger(prev => prev + 1)
   };
   return (
     <div className={"contentReelBody"}>
       <div className="contentReelResults">
-        {((!results.text || results.text?.length === 0) && (!results.image || results.image?.length === 0) && (!results.frames || Object.keys(results.frames).length === 0)) && (
-          <div className='empty_content_container'>
-            <p>No text or image layers found. Please try again.</p>
-          </div>
-        )}
+        {(!results.text || results.text?.length === 0) &&
+          (!results.image || results.image?.length === 0) &&
+          (!results.frames || Object.keys(results.frames).length === 0) && (
+            <div className="empty_content_container">
+              <p>No text or image layers found. Please try again.</p>
+            </div>
+          )}
 
-        {results.text && Array.isArray(results.text) &&  results.text.length > 0 && (
-          <div className={"content_container"} ref={textRef}>
-            <div className={"titleContainer"}>
-              <h3 className="layerTitle">Text Layers</h3>
-              <p className="description">Selected at least 1 layer.</p>
+        {results.text &&
+          Array.isArray(results.text) &&
+          results.text.length > 0 && (
+            <div className={"content_container"} ref={textRef}>
+              <div className={"titleContainer"}>
+                <h3 className="layerTitle">Text Layers</h3>
+                <p className="description">Selected at least 1 layer.</p>
+              </div>
+              <div className={"list"}>
+                {results.text.map((item) => (
+                  <ContentReelLayerItem
+                    key={item[1]} // Assuming item[1] is unique
+                    item={item}
+                    type="text"
+                    onSelectionChange={handleSelectionChange}
+                    resetTrigger={resetTrigger}
+                  />
+                ))}
+              </div>
             </div>
-            <div className={"list"}>
-              {results.text.map((item) => (
-                <ContentReelLayerItem
-                  key={item[1]} // Assuming item[1] is unique
-                  item={item}
-                  type="text"
-                  onSelectionChange={handleSelectionChange}
-                />
-              ))}
-            </div>
-          </div>
-        )}
+          )}
 
-        {results.image && Array.isArray(results.image) &&  results.image.length > 0&& (
-          <div className={"content_container"} ref={imageRef}>
-            <div className={"titleContainer"}>
-              <h3 className="layerTitle">Image Layers</h3>
-              <p className="description">Select at least one layer to update its content.</p>
+        {results.image &&
+          Array.isArray(results.image) &&
+          results.image.length > 0 && (
+            <div className={"content_container"} ref={imageRef}>
+              <div className={"titleContainer"}>
+                <h3 className="layerTitle">Image Layers</h3>
+                <p className="description">
+                  Select at least one layer to update its content.
+                </p>
+              </div>
+              <div className={"list"}>
+                {results.image.map((item) => (
+                  <ContentReelLayerItem
+                    key={item[1]} // Assuming item[1] is unique
+                    item={item}
+                    type="image"
+                    onSelectionChange={handleSelectionChange}
+                    resetTrigger={resetTrigger}
+                  />
+                ))}
+              </div>
             </div>
-            <div className={"list"}>
-              {results.image.map((item) => (
-                <ContentReelLayerItem
-                  key={item[1]} // Assuming item[1] is unique
-                  item={item}
-                  type="image"
-                  onSelectionChange={handleSelectionChange}
-                />
-              ))}
-            </div>
-          </div>
-        )}
+          )}
 
         {results.frames &&
           typeof results.frames === "object" &&
@@ -226,7 +240,9 @@ function ContentReel({ results }: ContentReelProps) {
             <div className={"content_container"} ref={framesRef}>
               <div className={"titleContainer"}>
                 <h3 className="layerTitle">Frames</h3>
-                <p className="description">Select at least one layer to update its content.</p>
+                <p className="description">
+                  Select at least one layer to update its content.
+                </p>
               </div>
               <div className={"list"}>
                 {Object.entries(results.frames).map(([frameId, frameData]) => (
@@ -242,6 +258,7 @@ function ContentReel({ results }: ContentReelProps) {
                               item={item}
                               type="text"
                               onSelectionChange={handleSelectionChange}
+                              resetTrigger={resetTrigger}
                             />
                           ))}
                         </div>
@@ -258,6 +275,7 @@ function ContentReel({ results }: ContentReelProps) {
                                 item={item}
                                 type="image"
                                 onSelectionChange={handleSelectionChange}
+                                resetTrigger={resetTrigger}
                               />
                             ))}
                           </div>
@@ -281,29 +299,16 @@ function ContentReel({ results }: ContentReelProps) {
         {/* Refresh Icon */}
         <div className="refreshContainer" onClick={handleReload}>
           <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
             xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="15"
+            viewBox="0 0 14 15"
+            fill="none"
           >
-            <mask
-              id="mask0_2426_6858"
-              style={{ maskType: "alpha" }}
-              maskUnits="userSpaceOnUse"
-              x="0"
-              y="0"
-              width="20"
-              height="20"
-            >
-              <rect width="20" height="20" fill="#D9D9D9" />
-            </mask>
-            <g mask="url(#mask0_2426_6858)">
-              <path
-                d="M10.0321 15.5832C8.48165 15.5832 7.16352 15.0403 6.07769 13.9546C4.99172 12.8689 4.44873 11.5511 4.44873 10.0011C4.44873 8.45109 4.99172 7.13282 6.07769 6.0463C7.16352 4.95977 8.48165 4.4165 10.0321 4.4165C10.9508 4.4165 11.793 4.62268 12.5585 5.03505C13.3239 5.44755 13.9604 5.99296 14.4679 6.6713V4.4165H15.5512V8.67921H11.2885V7.59609H13.8094C13.4119 6.95817 12.8827 6.44935 12.2219 6.06963C11.5612 5.68977 10.8312 5.49984 10.0321 5.49984C8.78206 5.49984 7.71956 5.93734 6.84456 6.81234C5.96956 7.68734 5.53206 8.74984 5.53206 9.99984C5.53206 11.2498 5.96956 12.3123 6.84456 13.1873C7.71956 14.0623 8.78206 14.4998 10.0321 14.4998C11.1987 14.4998 12.1987 14.1144 13.0321 13.3436C13.8654 12.5728 14.3446 11.6248 14.4696 10.4998H15.5785C15.4642 11.9432 14.879 13.1512 13.8229 14.124C12.7668 15.0968 11.5032 15.5832 10.0321 15.5832Z"
-                fill="#1C1B1F"
-              />
-            </g>
+            <path
+              d="M7.03612 14.5C5.07179 14.5 3.40806 13.822 2.04493 12.466C0.681644 11.1101 0 9.45518 0 7.5014C0 5.54762 0.681644 3.89228 2.04493 2.53537C3.40806 1.17846 5.07179 0.5 7.03612 0.5C8.13297 0.5 9.17096 0.742589 10.1501 1.22777C11.129 1.7131 11.9433 2.39786 12.5928 3.28203V0.5H14V6.20757H8.26298V4.8078H11.9687C11.4743 3.90667 10.7886 3.19679 9.91178 2.67817C9.03508 2.15939 8.07653 1.9 7.03612 1.9C5.47254 1.9 4.14349 2.44444 3.04899 3.53333C1.95448 4.62222 1.40722 5.94444 1.40722 7.5C1.40722 9.05556 1.95448 10.3778 3.04899 11.4667C4.14349 12.5556 5.47254 13.1 7.03612 13.1C8.24008 13.1 9.32677 12.7578 10.2962 12.0733C11.2656 11.3889 11.9458 10.4867 12.3367 9.36667H13.8196C13.3939 10.8899 12.5553 12.1262 11.3038 13.0757C10.0523 14.0252 8.62972 14.5 7.03612 14.5Z"
+              fill="#181B29"
+            />
           </svg>
         </div>
       </div>

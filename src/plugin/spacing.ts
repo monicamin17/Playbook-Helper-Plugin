@@ -105,7 +105,6 @@ export async function checkSpacing(node: any) {
 
 export async function checkRadius(node: any) {
   // Note: Vectors have ONLY a cornerRadius and don't have a boundVariables.cornerRadius
-  console.log(node);
   if(node.type === 'VECTOR' || node.type === 'POLYGON'){
     if(node.cornerRadius !== 0){
       addToMap(radiusMap, node.cornerRadius,  node.name, node.id, "Corner Radius");

@@ -28,21 +28,21 @@
   align-self: stretch;
   border-bottom: 1px solid theme-color($light-theme, utility, border_primary);
 
-  p{
+  p {
     font-size: 12px;
     color: theme-color($light-theme, text, secondary);
   }
 
-  h2{
+  h2 {
     font-weight: 600;
     font-size: 16px;
     letter-spacing: -2%;
     line-height: 100%;
-    font-family: 'Inter';
+    font-family: "Inter";
   }
 }
 
-@mixin stylesCategories{
+@mixin stylesCategories {
   justify-content: space-between;
   display: flex;
 }
@@ -50,8 +50,8 @@
   @include stylesHeading();
 }
 
-.stylesCategories{
-@include stylesCategories();
+.stylesCategories {
+  @include stylesCategories();
 }
 @mixin linter_button {
   display: inline-flex;
@@ -178,6 +178,7 @@
   gap: map-get($spacing, 0);
   border-radius: map-get($radius, 4);
   border: 1px solid theme-color($light-theme, utility, border_primary);
+  overflow: hidden;
 }
 .affectedLayersList {
   @include affectedLayersList;
@@ -432,14 +433,13 @@
   @include rotatedIcon();
 }
 
-
-.styleListItem{
+.styleListItem {
   @include issueContainer();
   justify-content: space-between;
   align-items: center;
 }
 
-@mixin stylesBtn{
+@mixin stylesBtn {
   display: inline-flex;
   width: 100%;
   padding: map-get($spacing, 75) map-get($spacing, 125);
@@ -455,19 +455,26 @@
     cursor: pointer;
   }
 }
-.stylesBtn{
+.stylesBtn {
   @include stylesBtn();
 }
 
-@mixin inputElement{
+.deleteBtn {
+  background: #d80a23;
+}
+@mixin inputElement {
   display: flex;
   gap: map-get($spacing, 25);
 }
 
-.inputElement{
+.inputElement {
   @include inputElement();
 }
 
-.editContainer{
+.editContainer {
   @include inputElement();
+
+  p {
+    color: black;
+  }
 }
