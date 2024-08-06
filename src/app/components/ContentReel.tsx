@@ -22,7 +22,7 @@ interface ContentReelProps {
 }
 
 function ContentReel({ results }: ContentReelProps) {
-  
+  console.log(results);
   const [selections, setSelections] = useState({});
   const textRef = useRef(null); // Separate ref for text items
   const imageRef = useRef(null); // Separate ref for image items
@@ -128,7 +128,7 @@ function ContentReel({ results }: ContentReelProps) {
       type: "applyContentReelChanges",
       value: dataToSend,
     });
-
+    console.log(dataToSend);
     parent.postMessage(
       { pluginMessage: { type: "applyContentReelChanges", value: dataToSend } },
       "*"
@@ -250,7 +250,7 @@ function ContentReel({ results }: ContentReelProps) {
                     <h4>{frameData.parentFrameName}</h4>
                     {frameData.textNodes && frameData.textNodes.length > 0 && (
                       <div className={"text-nodes"}>
-                        <h5>Text Nodes</h5>
+                        <h5>Text Layers</h5>
                         <div className={"list"}>
                           {frameData.textNodes.map((item) => (
                             <ContentReelLayerItem
@@ -267,7 +267,7 @@ function ContentReel({ results }: ContentReelProps) {
                     {frameData.imageNodes &&
                       frameData.imageNodes.length > 0 && (
                         <div className={"image-nodes"}>
-                          <h5>Image Nodes</h5>
+                          <h5>Image Layers</h5>
                           <div className={"list"}>
                             {frameData.imageNodes.map((item) => (
                               <ContentReelLayerItem

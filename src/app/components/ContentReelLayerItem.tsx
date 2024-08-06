@@ -118,40 +118,7 @@ function ContentReelLayerItem({ item, type, onSelectionChange, resetTrigger }) {
             </svg>
             <div className="text_info">
               <p>{item[0]}</p>
-              <p>
-                {selectedOption ? (
-                  <div className="selectedOptionContainer">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <mask
-                        id="mask0_2426_6870"
-                        style={{ maskType: "alpha" }}
-                        maskUnits="userSpaceOnUse"
-                        x="0"
-                        y="0"
-                        width="20"
-                        height="20"
-                      >
-                        <rect width="20" height="20" fill="#D9D9D9" />
-                      </mask>
-                      <g mask="url(#mask0_2426_6870)">
-                        <path
-                          d="M11.8718 13.7115L11.0977 12.9536L13.5095 10.5417H4.41663V9.45837H13.5095L11.0977 7.04649L11.8718 6.28857L15.5833 10L11.8718 13.7115Z"
-                          fill="#1C1B1F"
-                        />
-                      </g>
-                    </svg>{" "}
-                    {selectedOption}
-                  </div>
-                ) : (
-                  ""
-                )}
-              </p>
+              <p>{selectedOption ? `-> ${selectedOption}` : ""}</p>
             </div>
           </div>
           {showOptions && (
