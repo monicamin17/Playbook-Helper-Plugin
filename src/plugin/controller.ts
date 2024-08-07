@@ -1,3 +1,4 @@
+// @collapse
 import * as Linter from "./linterHelper";
 import * as Styles from "./styles";
 import * as Helper from "@figma-plugin/helpers";
@@ -6,6 +7,7 @@ import * as ContentReel from "./contentReel";
 // import * as API from "./access";
 // import * as Authenticate from "./authentication";
 import * as StickyNote from "./stickynote";
+
 // Constants
 const UI_WIDTH = 500;
 const UI_HEIGHT = 600;
@@ -20,12 +22,23 @@ figma.ui.resize(UI_WIDTH, UI_HEIGHT);
 
 
 init();
+// Retrieve the token when the plugin initializes
+async function init() {
+  const token = await figma.clientStorage.getAsync("figmaToken");
+  if (token) {
+    figma.ui.postMessage({ type: "tokenSaved", token });
+  } else {
+    figma.ui.postMessage({ type: "errorToken" });
+  }
+}
+
 
 figma.ui.onmessage = async (msg) => {
   // console.log(msg.type);
   // console.log(msg.value);
 
   switch (msg.type) {
+    /* AUTHENTICATION */
     // case "saveToken":
     //   await Authenticate.saveToken(msg.token);
     //   figma.ui.postMessage({ type: "tokenSaved" });
@@ -34,22 +47,8 @@ figma.ui.onmessage = async (msg) => {
     //   const token = await Authenticate.getToken();
     //   figma.ui.postMessage({ type: "token", token });
     //   break;
-    case "stickyNote":
-      await StickyNote.default(msg.value);
-      break;
-    case "pluginDrop":
-      await StickyNote.default(msg.dropMetadata, msg.clientX, msg.clientY);
-      break;
-    case "contentReel":
-      await ContentReel.start();
-      break;
-    case "applyContentReelChanges":
-      for (const change of msg.value) {
-        const nodeId = change.id;
-        const selection = change.selectedOption;
-        await ContentReel.handleSelection(nodeId, selection);
-      }
-      break;
+
+    /* LINTER */
     case "userSelection":
       userSelection = msg.value;
       await handleUserSelection();
@@ -65,63 +64,94 @@ figma.ui.onmessage = async (msg) => {
     case "selectAllNodes":
       await selectAllNodes(msg.value);
       break;
+    
+    /* CONTENT REEL */
+    case "contentReel":
+      await ContentReel.start();
+      break;
+    case "applyContentReelChanges":
+      for (const change of msg.value) {
+        const nodeId = change.id;
+        const selection = change.selectedOption;
+        await ContentReel.handleSelection(nodeId, selection);
+      }
+      break;
+    
+      /* STICKY NOTE */
+    case "stickyNote":
+      await StickyNote.default(msg.value);
+      break;
+    case "pluginDrop":
+      await StickyNote.default(msg.dropMetadata, msg.clientX, msg.clientY);
+      break;
   }
 };
 
-async function returnSavedLibrary(){
-  let allStyles = await Styles.getSavedKeys();
-  let returnLibraries = [];
-  for (const library of allStyles) {
-    let libraryObject = await figma.clientStorage.getAsync(library);
-    let libraryName = library;
-    let lastSaved = libraryObject[1];
-    console.log(libraryName, ' ', lastSaved);
 
-    returnLibraries.push([libraryName, lastSaved]);
-  }
-  console.log("GETTING SAVED STYLES! ", returnLibraries);
-  figma.ui.postMessage({ type: "All Saved Styles", data: returnLibraries });
-}
-
-
-
-// Retrieve the token when the plugin initializes
-async function init() {
-  const token = await figma.clientStorage.getAsync("figmaToken");
-  if (token) {
-    figma.ui.postMessage({ type: "tokenSaved", token });
-  } else {
-    figma.ui.postMessage({ type: "errorToken" });
+// Checks which libraries are imported into the file
+export async function logAvailableLibraries() {
+  try {
+    importedLibraries = await figma.teamLibrary.getAvailableLibraryVariableCollectionsAsync();
+  } catch (error) {
+    console.error("Error fetching available libraries: ", error);
   }
 }
 
-// Select/zoom into the node that the user selected
-async function handleSpecificNode(nodeId: string) {
-  const node = await figma.getNodeByIdAsync(nodeId);
-  if (node && "type" in node) {
-    // Check if the node is a SceneNode (i.e., selectable)
-    const sceneNode = node as SceneNode;
+// Goes through every node in your selection
+async function checkIfBound(selection: readonly SceneNode[]) {
+  try {
+    // Go through each selected node
+    for (const element of selection) {
+      const node = (await figma.getNodeByIdAsync(element.id)) as SceneNode;
+      // console.log(node);
+      await traverseNode(node);
+    }
 
-    // Set the selection to this node
-    figma.currentPage.selection = [sceneNode];
-    figma.viewport.scrollAndZoomIntoView([sceneNode]);
-  } else {
-    console.log("Node not found or not selectable");
+    // After scanning each node, send it back to the UI
+    Linter.sendResultsToUI();
+  } catch (error) {
+    console.error("Error:", error);
   }
 }
+
+// Will go through each node's child until there are no more children left. Will active any linter features
+async function traverseNode(node: SceneNode) {
+  // Will make sure the node is not an instance, component, or component_set == will check if it's a logo
+  if (await shouldSkipNode(node)) return;
+
+  // Lint for spacing
+  if (userSelection === "Spacing" || userSelection === "All") {
+    // console.log(node);
+    await Linter.startSpacing(node);
+  }
+
+  // Lint for nodes that have a solid paint fill
+  if (
+    userSelection !== "spacing" &&
+    !Helper.isGroupNode(node) &&
+    (node as any).fills?.[0]?.type !== "IMAGE"
+  ) {
+    // console.log("gonna checknodecolors");
+    await checkNodeColors(node);
+  }
+
+  if ("children" in node) {
+    for (const child of node.children) {
+      if (!child.locked) await traverseNode(child);
+    }
+  }
+}
+
 
 /* If user selects any of the Linter options, reset all the data, check imported libraries, 
    and go through the selection */
 async function handleUserSelection() {
   await Linter.resetData();
-  // importedLibraries = [];
-  console.log('importedLIbraries: ', importedLibraries);
   await logAvailableLibraries();
 
   if(userSelection === 'Save Styles'){
     await Styles.getLocalPaintStyles();
     await returnSavedLibrary();
-    // figma.ui.postMessage({ type: 'results', data: 'Successfully stored local styles.' });
     return;
   }
   else{ 
@@ -146,61 +176,18 @@ async function selectAllNodes(values: string[]) {
   figma.viewport.scrollAndZoomIntoView(nodes);
 }
 
-// Checks which libraries are imported into the file
-export async function logAvailableLibraries() {
-  try {
-    importedLibraries = await figma.teamLibrary.getAvailableLibraryVariableCollectionsAsync();
-      console.log('after process: ', importedLibraries);
-      // for(const lib of importedLibraries){
-      //   let variabless = await figma.teamLibrary.getVariablesInLibraryCollectionAsync(lib.key);
-      //   console.log(variabless);
-      // }
-  } catch (error) {
-    console.error("Error fetching available libraries: ", error);
-  }
-}
+// Select/zoom into the node that the user selected
+async function handleSpecificNode(nodeId: string) {
+  const node = await figma.getNodeByIdAsync(nodeId);
+  if (node && "type" in node) {
+    // Check if the node is a SceneNode (i.e., selectable)
+    const sceneNode = node as SceneNode;
 
-async function checkIfBound(selection: readonly SceneNode[]) {
-  try {
-    // Go through each selected node
-    for (const element of selection) {
-      const node = (await figma.getNodeByIdAsync(element.id)) as SceneNode;
-      // console.log(node);
-      await traverseNode(node);
-    }
-
-    // After scanning each node, send it back to the UI
-    Linter.sendResultsToUI();
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
-
-async function traverseNode(node: SceneNode) {
-  // Will make sure the node is not an instance, component, or component_set == will check if it's a logo
-  if (await shouldSkipNode(node)) return;
-
-  // Lint for spacing
-  if (userSelection === "Spacing" || userSelection === "All") {
-    console.log(node);
-    await Linter.startSpacing(node);
-    // return;
-  }
-
-  // Lint for nodes that have a solid paint fill
-  if (
-    userSelection !== "spacing" &&
-    !Helper.isGroupNode(node) &&
-    (node as any).fills?.[0]?.type !== "IMAGE"
-  ) {
-    console.log("gonna checknodecolors");
-    await checkNodeColors(node);
-  }
-
-  if ("children" in node) {
-    for (const child of node.children) {
-      if (!child.locked) await traverseNode(child);
-    }
+    // Set the selection to this node
+    figma.currentPage.selection = [sceneNode];
+    figma.viewport.scrollAndZoomIntoView([sceneNode]);
+  } else {
+    console.log("Node not found or not selectable");
   }
 }
 
@@ -235,7 +222,6 @@ async function checkNodeColors(node: SceneNode) {
   );
 }
 
-
 // Will check if the node has the word "@PLUGIN_SKIP" in it's description -> keyword to skip
 async function checkComponent(node: any): Promise<boolean> {
   if (Helper.isInstanceNode(node)) {
@@ -253,4 +239,20 @@ async function checkComponent(node: any): Promise<boolean> {
   }
 
   return false;
+}
+
+// Returns your saved library when you click on the "Styles" tab in the left side panel navigation
+async function returnSavedLibrary(){
+  let allStyles = await Styles.getSavedKeys();
+  let returnLibraries = [];
+  for (const library of allStyles) {
+    let libraryObject = await figma.clientStorage.getAsync(library);
+    let libraryName = library;
+    let lastSaved = libraryObject[1];
+    // console.log(libraryName, ' ', lastSaved);
+
+    returnLibraries.push([libraryName, lastSaved]);
+  }
+  // console.log("GETTING SAVED STYLES! ", returnLibraries);
+  figma.ui.postMessage({ type: "All Saved Styles", data: returnLibraries });
 }

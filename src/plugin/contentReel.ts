@@ -1,3 +1,4 @@
+//@collapse
 import * as Utilities from "@create-figma-plugin/utilities";
 import * as Helper from "@figma-plugin/helpers";
 const frameToNodes: Map<
@@ -127,10 +128,6 @@ async function parseNodes(node: any) {
       imageNodes.push([node.name, node.id]);
     }
   }
-  
-
- 
-
 }
 
  // Helper function to get the frame ID
@@ -162,17 +159,16 @@ function getParentFrame(node: BaseNode): InstanceNode | ComponentNode | BaseNode
   return null;
 }
 
+// Apply user's changes after they submit
 export async function handleSelection(nodeId: string, option: string) {
-  console.log(nodeId);
+
   // Only call these functions when required
   let getPlayerInfo = option === 'Player' || option === 'Team' || option === 'Headshot';
   let getNewsInfo = option === 'Headline' || option === 'Author' || option === 'League' || option === 'Thumbnail';
 
 
   const node = await figma.getNodeByIdAsync(nodeId);
-  console.log('node: ', node);
   const parentFrame = getParentFrame(node);
-  console.log('parentFrame: ', parentFrame);
   
   const league = getRandomLeague();
   let news;
@@ -181,7 +177,6 @@ export async function handleSelection(nodeId: string, option: string) {
   
   if (parentFrame) {
     const frameData = frameToNodes.get(parseFrameId(parentFrame.id));
-    console.log('frameData: ', frameData);
     if (frameData) {
       if (!frameData.news && getNewsInfo) {
         frameData.news = await getArenaNews(league);

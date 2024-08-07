@@ -1,4 +1,3 @@
-// import * as Utilities from "@create-figma-plugin/utilities";
 import * as Helper from "@figma-plugin/helpers";
 
 

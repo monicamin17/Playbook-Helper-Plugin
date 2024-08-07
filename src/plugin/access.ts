@@ -1,9 +1,11 @@
+/* THIS FILE IS USED FOR ACCESSING A USER'S FILES AND THEREFORE ACCESSING THE PLAYBOOK DESIGN SYSTEMS TEAM PROJECT FOLDER */
 // import * as Authenticate from './authentication';
 
 let token: string;    // Personal access token
 export let keyMap: Map<string, string> = new Map(); // Map for short keys to full keys
 /* The team id will be present in the URL after the word team and before your team name. */
 export let teamId = '';
+
 
 
 // Make sure this token is valid

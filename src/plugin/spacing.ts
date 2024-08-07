@@ -16,9 +16,7 @@ export let paddingBottomMap = new Map();
 export let paddingTopBottomMap = new Map();
 
 export async function checkSpacing(node: any) {
-  console.log(node);
   let boundVariables = node["boundVariables"];
-  console.log('boundVariables: ', boundVariables);
 
 
   let verticalSpacing = false;
