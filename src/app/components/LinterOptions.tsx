@@ -2,7 +2,7 @@ import React from "react";
 import "../styles/Linter.scss";
 
 function LinterOptions({ onClick, activeOption }) {
-  const options = ["All", "Library", "Hex", "Spacing"];
+  const options = ["All", "Library", "Hex", "Spacing", "Corner Radius"];
 
   const getIcon = (option, isActive) => {
     switch (option) {
@@ -212,6 +212,42 @@ function LinterOptions({ onClick, activeOption }) {
                 clipRule="evenodd"
                 d="M15.5715 16.9997L15.5715 4H16.5715L16.5715 16.9997H15.5715ZM3.5 16.9999V4.0002L4.5 4.0002L4.5 16.9999H3.5ZM13.7139 6.78493H6.28547V14.2133H13.7139V6.78493Z"
                 fill="#FAFAFB"
+              />
+            </svg>
+          );
+        }
+      case "Corner Radius":
+        if (!isActive) {
+          return (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M14 1.46405H5.51417C3.27735 1.46405 1.46405 3.27735 1.46405 5.51417V14H0V5.51417C0 2.46877 2.46878 0 5.51417 0H14V1.46405Z"
+                fill="#181B29"
+              />
+            </svg>
+          );
+        } else {
+          return (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M14 1.46405H5.51417C3.27735 1.46405 1.46405 3.27735 1.46405 5.51417V14H0V5.51417C0 2.46877 2.46878 0 5.51417 0H14V1.46405Z"
+                fill="white"
               />
             </svg>
           );

@@ -1,4 +1,3 @@
-// @collapse
 import * as Linter from "./linterHelper";
 import * as Styles from "./styles";
 import * as Helper from "@figma-plugin/helpers";
@@ -34,8 +33,8 @@ async function init() {
 
 
 figma.ui.onmessage = async (msg) => {
-  // console.log(msg.type);
-  // console.log(msg.value);
+  console.log(msg.type);
+  console.log(msg.value);
 
   switch (msg.type) {
     /* AUTHENTICATION */
@@ -121,13 +120,16 @@ async function traverseNode(node: SceneNode) {
 
   // Lint for spacing
   if (userSelection === "Spacing" || userSelection === "All") {
-    // console.log(node);
     await Linter.startSpacing(node);
+  }
+
+  if (userSelection === "Corner Radius" || userSelection === "All") {
+    await Linter.startRadius(node);
   }
 
   // Lint for nodes that have a solid paint fill
   if (
-    userSelection !== "spacing" &&
+    userSelection !== "spacing"  &&
     !Helper.isGroupNode(node) &&
     (node as any).fills?.[0]?.type !== "IMAGE"
   ) {

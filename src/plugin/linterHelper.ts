@@ -75,12 +75,15 @@ export async function resetData() {
 
 // If user lints for spacing, start the functions
 export async function startSpacing(node: any) {
-  if(Helper.isTextNode(node) || node.type === 'VECTOR' || node.type === 'BOOLEAN_OPERATION' || node.type === 'GROUP' || node.type === 'LINE' || node.type === 'SECTION') return; 
-  Spacing.checkRadius(node);
 
   // Only frames in autolayout can have padding/spacing
   if (Helper.isFrameNode(node) && node["layoutMode"] !== "NONE")
     Spacing.checkSpacing(node);
+}
+export async function startRadius(node:any){
+  if(Helper.isTextNode(node) || node.type === 'VECTOR' || node.type === 'BOOLEAN_OPERATION' || node.type === 'GROUP' || node.type === 'LINE' || node.type === 'SECTION') return; 
+  
+  Spacing.checkRadius(node);
 }
 
 
@@ -123,7 +126,7 @@ export async function sendResultsToUI() {
     results.hexColors = Array.from(Hex.hexMap.entries());
   }
 
-  if (Main.userSelection === "Spacing" || Main.userSelection === "All") {
+  if(Main.userSelection === 'Corner Radius' || Main.userSelection === 'All'){
     if (Spacing.bottomLeftRadiusMap.size > 0) {
       results.bottomLeftRadiusMap = Array.from(
         Spacing.bottomLeftRadiusMap.entries()
@@ -149,6 +152,10 @@ export async function sendResultsToUI() {
     if (Spacing.radiusMap.size > 0) {
       results.radiusMap = Array.from(Spacing.radiusMap.entries());
     }
+  }
+  
+  if (Main.userSelection === "Spacing" || Main.userSelection === "All") {
+    
 
     if (Spacing.itemSpacingMap.size > 0) {
       results.itemSpacingMap = Array.from(Spacing.itemSpacingMap.entries());

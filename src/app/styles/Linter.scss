@@ -54,6 +54,7 @@
   @include stylesCategories();
 }
 @mixin linter_button {
+  white-space: nowrap;
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -67,6 +68,10 @@
 
   &:hover {
     background-color: theme-color($light-theme, surfaces, secondary);
+  }
+
+  svg{
+    flex-shrink: 0;
   }
 }
 .linter_button {
